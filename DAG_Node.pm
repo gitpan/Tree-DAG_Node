@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-# -*-Perl-*-  Time-stamp: "1999-05-14 11:44:56 MDT"
+# -*-Perl-*-  Time-stamp: "2000-03-05 16:08:52 MST"
 
 package Tree::DAG_Node;
 require 5;
@@ -9,7 +9,7 @@ use strict;
 use vars qw(@ISA $Debug $VERSION);
 
 $Debug = 0;
-$VERSION = "1.01";
+$VERSION = "1.02";
 
 # To do: Add pushier (or more careful) cyclicity checks ?
 #  Or just do away with 'em altogether?
@@ -1401,7 +1401,7 @@ sub left_sisters {
   die "SPORK ERROR 9767: I'm not in my mother's daughter list!?!?";
 }
 
-=item $node->right_sisters
+=item $node->right_sister
 
 Returns the node that's the immediate right sister of $node.  If $node
 is the rightmost (or only) daughter of its mother (or has no mother),
@@ -2472,8 +2472,22 @@ sub draw_ascii_tree {
       $new_pipes = "|";
     } else {
       my($init_space, $end_space);
-      $init_space = $1 if $new_pipes =~ s<^( +)><>s;
-      $end_space  = $1 if $new_pipes =~ s<( +)$><>s;
+
+      # Thanks to Gilles Lamiral for pointing out the need to set to '',
+      #  to avoid -w warnings about undeffiness.
+
+      if( $new_pipes =~ s<^( +)><>s ) {
+        $init_space = $1;
+      } else {
+        $init_space = '';
+      }
+
+      if( $new_pipes =~ s<( +)$><>s ) {
+        $end_space  = $1
+      } else {
+        $end_space = '';
+      }
+
       $new_pipes =~ tr< ><->;
       substr($new_pipes,0,1) = "/";
       substr($new_pipes,-1,1) = "\\";
