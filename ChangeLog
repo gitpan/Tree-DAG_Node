@@ -1,5 +1,5 @@
 Revision history for Perl extension Tree::DAG_Node.
-                                        Time-stamp: "1998-10-28 10:29:56 MST"
+                                        Time-stamp: "1998-11-02 21:14:58 MST"
 
 1998-10-27  Sean M. Burke  sburke@netadventure.net
 
@@ -9,4 +9,17 @@ Revision history for Perl extension Tree::DAG_Node.
 
 	* Release 0.74 -- whoops, forgot to bundle the README.
 	No change in the module.
+
+1998-11-03  Sean M. Burke  sburke@netadventure.net
+
+	* Release 0.75 -- minor changes:
+
+	New methods new_daughter, new_daughter_left.
+
+	$obj->new constructor syntax now documented.
 	
+	Internal accesses to "daughter" and "mother" attribs
+	are now direct, for efficiency's sake.
+
+	Minor improvements to the docs.
+

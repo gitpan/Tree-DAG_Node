@@ -9,7 +9,7 @@ use strict;
 use vars qw(@ISA $Debug $VERSION);
 
 $Debug = 0;
-$VERSION = "0.74";
+$VERSION = "0.75";
 
 # To do: Add pushier (or more careful) cyclicity checks ?
 
@@ -100,11 +100,6 @@ can be used as a normal class.  You can go ahead and say:
 and so on, constructing and linking objects from Tree::DAG_Node and
 making useful tree structures out of them.
 
-Note: A I<passing> acquintance with the source code for this class is
-assumed for anyone using this class as a base class -- especially if
-you're overriding existing methods, and definitely if you're
-overriding linkage methods.
-
 =head1 OBJECT CONTENTS
 
 Implementationally, each node in a tree is an object, in the sense of
@@ -130,9 +125,9 @@ meaningful or printable here.
 
 Presumably a hashref to whatever other attributes the user wants to
 store without risk of colliding with the object's real attributes.
-(Example usage: attributes to an SGML tag -- you wouldn't want the
-existence of a "mother=foo" pair in such a tag to collide with a node
-object's 'mother' attribute.)
+(Example usage: attributes to an SGML tag -- you definitely wouldn't
+want the existence of a "mother=foo" pair in such a tag to collide with
+a node object's 'mother' attribute.)
 
 Aside from (by default) initializing it to {}, and having the access
 method called "attributes" (described a ways below), I don't do
@@ -150,6 +145,22 @@ are never written to directly, but are changed as appropriate by the
 The other two (and whatever others you may add in derived classes) are
 simply accessed thru the same-named methods, discussed further below.
 
+=head2 ABOUT THE DOCUMENTED INTERFACE
+
+Stick to the documented interface (and comments in the source --
+especially ones saying "undocumented!" and/or "disfavored!" -- do not
+count as documentation!), and don't rely on any behavior that's not in
+the documented interface.
+
+Specifically, unless the documentation for a particular method says
+"this method returns thus-and-such a value", then you should not rely on
+it returning anything meaningful.
+
+A I<passing> acquintance with at least the broader details of the source
+code for this class is assumed for anyone using this class as a base
+class -- especially if you're overriding existing methods, and
+B<definitely> if you're overriding linkage methods.
+
 =head1 MAIN CONSTRUCTOR, AND INITIALIZER
 
 =over
@@ -162,7 +173,12 @@ daughters, 'attributes' setting of a new empty hashref), and returns
 the object created.  (If you just said "CLASS->new()" or "CLASS->new",
 then it pretends you called "CLASS->new({})".)
 
+Currently no options for putting in {...options...} are part
+of the documented interface, but the options is here in case
+you want to add such behavior in a derived class.
+
 Read on if you plan on using Tree::DAG_New as a base class.
+(Otherwise feel free to skip to the description of _init.)
 
 There are, in my mind, two ways to do object construction:
 
@@ -193,18 +209,26 @@ _init from scratch, supporting all the switches from the old class.
 This turns what would have been the simple setting of default
 attribute values into a major task.  In other words, supporting
 attribute-setting options for a constructor pointlessly complicates
-the inheritance.
+inheritance.
 
-So, the _init you (can) provide in your derived class, B<in my
-opinion>, should merely initialize (with sane defaults) the attributes
-of the new object (at least the ones where undef is not a sane value);
-having options for default values is not worth the bother for either
-the class programmer or the class user.
+So, the _init you (can) provide in your derived class, B<in my opinion>,
+should merely initialize (with sane defaults) the attributes of the new
+object (at least the ones where undef is not a sane value -- and if your
+derived class just adds attributes where undef is an OK initial value,
+then there's no reason to override _init.  Having options for the
+constructor to override default values is not worth the bother for
+either the class programmer or the class user.
 
 (This is not to say that options in general for a constructor are bad
 -- C<random_network>, discussed far below, necessarily takes options.
 But note that these are not options for the default values of
 attributes.)
+
+=item the constructor $obj->new() or $obj->new({...options...})
+
+An alternate syntax for the above.  This B<does not copy> $obj, but
+merely constructs a new object in the same class as it.
+Saves you the bother of going $class = ref $obj; $obj2 = $class->new;
 
 =cut
 
@@ -229,12 +253,19 @@ Initialize the object's attribute values.  See the discussion above.
 Presumably this should be called only by the guts of the C<new>
 constructor -- never by the end user.
 
+(Currently there are no documented options for putting in
+{...options...}, but -- in case you want to disregard the above rant --
+the option exists for you to use {...options...} for something useful in
+a derived class.)
+
 If, in a derived class, you add attributes beyond what are in the base
 class, you should probably provide an _init_[methodname] to initialize
 them, and have your _init call that method -- at least if undef won't
 do as an initial value for them.
 
 Please see the source for more information.
+
+=item see also (below) the constructors "new_daughter" and "new_daughter_left"
 
 =back
 
@@ -260,10 +291,17 @@ sub _init { # method
 
   # Undocumented and disfavored.  Consider this just an example.
   ( $o->{'mother'} )->add_daughter($this) if ref($o->{'mother'});
+  # DO NOT use this option (as implemented) with new_daughter or
+  #  new_daughter_left!!!!!
+  # BAD THINGS MAY HAPPEN!!!
 
   # Undocumented and disfavored.  Consider this just an example.
   $this->set_daughters( @{$o->{'daughters'}} )
     if ref($o->{'daughters'}) && (@{$o->{'daughters'}});
+  # DO NOT use this option (as implemented) with new_daughter or
+  #  new_daughter_left!!!!!
+  # BAD THINGS MAY HAPPEN!!!
+
   # You CAN add other switch options in your derived class's _init method.
 
   return;
@@ -296,10 +334,6 @@ sub _init_attributes { # to be called by an _init
 ###########################################################################
 
 =head1 LINKAGE-RELATED METHODS
-
-Note that with all methods in this document, unless the documentation
-for a particular method says "this method returns thus-and-such a
-value", then you should not rely on it returning anything meaningful.
 
 =over
 
@@ -424,15 +458,22 @@ Or consider a structure like:
 
 =cut
 
+
 ###
 ##  Used by the adding methods
-#
+#    (except maybe new_daughter, and new_daughter_left)
+
 sub _add_daughters_wrapper {
   my($mother, $callback, @daughters) = @_;
   return unless @daughters;
 
   my %ancestors;
   @ancestors{ $mother->ancestors } = undef;
+  # This could be made more efficient by not bothering to compile
+  # the ancestor list for $mother if all the nodes to add are
+  # daughterless.
+  # But then you have to CHECK if they're daughterless.
+  # If $mother is [big number] generations down, then it's worth checking.
 
   foreach my $daughter (@daughters) { # which may be ()
     croak "daughter must be a node object!" unless can($daughter, 'is_node');
@@ -454,6 +495,7 @@ sub _add_daughters_wrapper {
     my $old_mother = $daughter->{'mother'};
 
     next if $old_mother eq $mother;
+      # noop if $daughter is already $mother's daughter
 
     $old_mother->remove_daughter($daughter) if ref($old_mother);
 
@@ -465,6 +507,7 @@ sub _add_daughters_wrapper {
 }
 
 ###########################################################################
+###########################################################################
 
 sub _update_daughter_links {
   # Eliminate any duplicates in my daughters list, and update
@@ -473,6 +516,7 @@ sub _update_daughter_links {
 
   my $them = $this->{'daughters'};
 
+  # Eliminate duplicate daughters.
   my %seen = ();
   @$them = grep { ref($_) && not($seen{$_}++) } @$them;
    # not that there should ever be duplicate daughters anyhoo.
@@ -504,6 +548,67 @@ sub _update_links { # update all descendant links for ancestorship below
 }
 
 ###########################################################################
+###########################################################################
+
+=item the constructor $daughter = $mother->new_daughter, or
+
+=item the constructor $daughter = $mother->new_daughter({...options...})
+
+This B<constructs> a B<new> node (of the same class as $mother), and
+adds it to the (right) end of the daughter list of $mother. This is
+essentially the same as going
+
+      $daughter = $mother->new;
+      $mother->add_daughter($daughter);
+
+but is rather more efficient because (since $daughter is guaranteed new
+and isn't linked to/from anything), it doesn't have to check that
+$daughter isn't an ancestor of $mother, isn't already daughter to a
+mother it needs to be unlinked from, isn't already in $mother's 
+daughter list, etc.
+
+As you'd expect for a constructor, it returns the node-object created.
+
+=cut
+
+# Note that if you radically change 'mother'/'daughters' bookkeeping,
+# you may have to change this routine, since it's one of the places
+# that directly writes to 'daughters' and 'mother'.
+
+sub new_daughter {
+  my($mother, @options) = @_;
+  my $daughter = $mother->new(@options);
+
+  push @{$mother->{'daughters'}}, $daughter;
+  $daughter->{'mother'} = $mother;
+
+  return $daughter;
+}
+
+=item the constructor $mother->new_daughter_left, or
+
+=item $mother->new_daughter_left({...options...})
+
+This is just like $mother->new_daughter, but adds the new daughter
+to the left (start) of $mother's daughter list.
+
+=cut
+
+# Note that if you radically change 'mother'/'daughters' bookkeeping,
+# you may have to change this routine, since it's one of the places
+# that directly writes to 'daughters' and 'mother'.
+
+sub new_daughter_left {
+  my($mother, @options) = @_;
+  my $daughter = $mother->new(@options);
+
+  unshift @{$mother->{'daughters'}}, $daughter;
+  $daughter->{'mother'} = $mother;
+
+  return $daughter;
+}
+
+###########################################################################
 
 =item $mother->remove_daughters( LIST )
 
@@ -521,7 +626,7 @@ sub remove_daughters { # write-only method
   return unless @daughters;
 
   my %to_delete;
-  @daughters = grep {ref($_) and $mother eq $_->mother} @daughters;
+  @daughters = grep {ref($_) and $mother eq $_->{'mother'}} @daughters;
   return unless @daughters;
   @to_delete{ @daughters } = undef;
 
@@ -739,13 +844,13 @@ the root, this returns an empty list.
 
 sub ancestors {
   my $this = shift;
-  my $mama = $this->mother; # initial condition
-  return () unless ref($mama); # I must be root.
+  my $mama = $this->{'mother'}; # initial condition
+  return () unless ref($mama); # I must be root!
 
   $this->no_cyclicity; # avoid infinite loops
 
   # Could be defined recursively, as:
-  # if(ref($mama = $this->mother)){
+  # if(ref($mama = $this->{'mother'})){
   #   return($mama, $mama->ancestors);
   # } else {
   #   return ();
@@ -754,7 +859,7 @@ sub ancestors {
   # faster.
 
   my @ancestors = ( $mama ); # start off with my mama
-  while(ref( $mama = $mama->mother )) { # walk up the tree
+  while(ref( $mama = $mama->{'mother'} )) { # walk up the tree
     push(@ancestors, $mama);
     # This turns into an infinite loop if someone gets stupid
     #  and makes this tree cyclic!  Don't do it!
@@ -788,7 +893,7 @@ Currently implemented as just a test of ($it->mother eq $node2).
 
 sub is_daughter_of {
   my($it,$mama) = @_[0,1];
-  return $it->mother eq $mama;
+  return $it->{'mother'} eq $mama;
 }
 
 ###########################################################################
@@ -853,7 +958,7 @@ sub leaves_under {
   $node->walk_down({ 'callback' =>
     sub {
       my $node = $_[0];
-      my @daughters = $node->daughters;
+      my @daughters = @{$node->{'daughters'}};
       push(@List, $node) unless @daughters;
       return 1;
     }
@@ -875,9 +980,9 @@ then this returns undef.
 
 sub left_sister {
   my $it = $_[0];
-  my $mother = $it->mother;
+  my $mother = $it->{'mother'};
   return undef unless $mother;
-  my @sisters = $mother->daughters;
+  my @sisters = @{$mother->{'daughters'}};
   
   return undef if @sisters  == 1; # I'm an only daughter
 
@@ -900,9 +1005,9 @@ mother), then this returns an empty list.
 
 sub left_sisters {
   my $it = $_[0];
-  my $mother = $it->mother;
+  my $mother = $it->{'mother'};
   return() unless $mother;
-  my @sisters = $mother->daughters;
+  my @sisters = @{$mother->{'daughters'}};
   return() if @sisters  == 1; # I'm an only daughter
 
   my @out = ();
@@ -923,9 +1028,9 @@ then this returns undef.
 
 sub right_sister {
   my $it = $_[0];
-  my $mother = $it->mother;
+  my $mother = $it->{'mother'};
   return undef unless $mother;
-  my @sisters = $mother->daughters;
+  my @sisters = @{$mother->{'daughters'}};
   return undef if @sisters  == 1; # I'm an only daughter
 
   my $seen = 0;
@@ -948,9 +1053,9 @@ mother), then this returns an empty list.
 
 sub right_sisters {
   my $it = $_[0];
-  my $mother = $it->mother;
+  my $mother = $it->{'mother'};
   return() unless $mother;
-  my @sisters = $mother->daughters;
+  my @sisters = @{$mother->{'daughters'}};
   return() if @sisters  == 1; # I'm an only daughter
 
   my @out;
@@ -981,10 +1086,10 @@ sub my_daughter_index {
   # special case: 0 for root.
   my $node = $_[0];
   my $ord = -1;
-  my $mother = $node->mother;
+  my $mother = $node->{'mother'};
 
   return 0 unless $mother;
-  my @sisters = $mother->daughters;
+  my @sisters = @{$mother->{'daughters'}};
 
   die "SPORK ERROR 6512:  My mother has no kids!!!" unless @sisters;
 
@@ -1057,7 +1162,7 @@ sub address {
     my $current_node = $root;
     while(@parts) { # no-op for root
       my $ord = shift @parts;
-      my @daughters = $current_node->daughters;
+      my @daughters = @{$current_node->{'daughters'}};
 
       if($#daughters < $ord) { # illegal address
         print "* $address has an out-of-range index ($ord)!" if $Debug;
@@ -1076,7 +1181,7 @@ sub address {
     my $current_node = $it;
     my $mother;
 
-    while(ref( $mother = $current_node->mother )) {
+    while(ref( $mother = $current_node->{'mother'} )) {
       unshift @parts, $current_node->my_daughter_index;
       $current_node = $mother;
     }
@@ -1159,7 +1264,7 @@ sub common_ancestor {
   my @ones = @_; # all nodes I was given
   my($first, @others) = @_;
 
-  return $first->mother unless @others;
+  return $first->{'mother'} unless @others;
     # which may be undef if $first is the root!
 
   my %ones;
@@ -1167,7 +1272,7 @@ sub common_ancestor {
 
   my $common = $first->common(@others);
   if(exists($ones{$common})) { # if the common is one of my nodes...
-    return $common->mother;
+    return $common->{'mother'};
     # and this might be undef, if $common is root!
   } else {
     return $common;
@@ -1249,7 +1354,7 @@ sub walk_down {
   if($callback_status) {
     # Keep recursing unless callback returned false... and if there's
     # anything to recurse into, of course.
-    my @daughters = can($this, 'is_node') ? $this->daughters : ();
+    my @daughters = can($this, 'is_node') ? @{$this->{'daughters'}} : ();
     if(@daughters) {
       $o->{'_depth'} += 1;
       #print "Depth " , $o->{'_depth'}, "\n";
@@ -1410,16 +1515,13 @@ sub random_network { # constructor or method.
         $children_number = int(rand($max_children));
       }
      Beget:
-      my @my_children;
       foreach (1 .. $children_number) {
         last Gen if $node_count > $max_node_count;
-        my $node = $class->new();
-        push @my_children, $node;
+        my $node = $mother->new_daughter;
         $node->name("Node$node_count");
         ++$node_count;
+        push(@children, $node);
       }
-      push(@children, @my_children) if @my_children;
-      $mother->add_daughters(@my_children) if @my_children;
     }
     @mothers = @children;
     @children = ();
@@ -1509,6 +1611,7 @@ sub lol_to_tree {
       $daughter = $class->new;
       $daughter->name($one);
     }
+    # And now link it up
     $node->add_daughter($daughter);
   }
 
@@ -1680,7 +1783,7 @@ sub draw_ascii_tree {
   my $it = $_[0];
   my $o = ref($_[1]) ? $_[1] : {};
   my(@box, @daughter_boxes, $width, @daughters);
-  @daughters = $it->daughters;
+  @daughters = @{$it->{'daughters'}};
 
   $it->no_cyclicity;
 
@@ -1959,21 +2062,55 @@ sub _dump_quote {
 
 =back
 
+=head1 BUG REPORTS
+
+If you find a bug in this library, report it to me as soon as possible,
+at the address listed in the AUTHOR section, below.  Please try to be
+as specific as possible about how you got the bug to occur.
+
+=head1 HELP!
+
+If you develop a given routine for dealing with trees in some way, and
+use it a lot, then if you think it'd be of use to anyone else, do email
+me about it; it might be helpful to others to include that routine, or
+something based on it, in a later version of this module.
+
+It's occurred to me that you might like to (and might yourself develop
+routines to) draw trees in something other than ASCII art.  If you do so
+-- say, for PostScript output, or for output interpretable by some
+external plotting program --  I'd be most interested in the results.
+
 =head1 RAMBLINGS
 
-Currently I don't assume anything about the class membership of nodes
-being manipulated, other than by testing whether each one provides a
-method C<is_node>, a la:
+Currently I don't assume (or enforce) anything about the class
+membership of nodes being manipulated, other than by testing whether
+each one provides a method C<is_node>, a la:
 
   die "Not a node!!!" unless &UNIVERSAL::can($node, "is_node");
 
-So, as far as I'm concerned, a given tree's nodes are free to belong
-to different classes, just so long as they provide C<is_node>, the few
-methods that this class relies on to navigate the tree, and have the
-same internal object structure -- at least as far as the C<daugher>
-and C<method> attributes.  Presumably this would be the case for any
-object belonging to a class derived from C<Tree::DAG_Node>, or
-belonging to C<Tree::DAG_Node> itself.
+So, as far as I'm concerned, a given tree's nodes are free to belong to
+different classes, just so long as they provide/inherit C<is_node>, the
+few methods that this class relies on to navigate the tree, and have the
+same internal object structure, or a superset of it. Presumably this
+would be the case for any object belonging to a class derived from
+C<Tree::DAG_Node>, or belonging to C<Tree::DAG_Node> itself.
+
+When routines in this class access a node's "mother" attribute, or its
+"daughters" attribute, they (generally) do so directly (via 
+$node->{'mother'}, etc.), for sake of efficiency.  But classes derived
+from this class should probably do this instead thru a method (via
+$node->mother, etc.), for sake of portability, abstraction, and general
+goodness.
+
+However, no routines in this class (aside from, necessarily, C<_init>,
+C<_init_name>, and C<name>) access the "name" attribute directly;
+routines (like the various tree draw/dump methods) get the "name" value
+thru a call to $obj->name().  So if you want the object's name to not be
+a real attribute, but instead have it derived dynamically from some feature
+of the object (say, based on some of its other attributes, or based on
+its address), you can to override the C<name> method, without causing
+problems.  (Be sure to consider the case of $obj->name as a write
+method, as it's used in C<lol_to_tree> and C<random_network>.)
 
 =head1 AUTHOR
 
