@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-# -*-Perl-*-  Time-stamp: "1998-10-26 20:58:09 MST"
+# -*-Perl-*-  Time-stamp: "1998-10-28 10:20:53 MST"
 
 package Tree::DAG_Node;
 require 5;
@@ -9,7 +9,7 @@ use strict;
 use vars qw(@ISA $Debug $VERSION);
 
 $Debug = 0;
-$VERSION = "0.73";
+$VERSION = "0.74";
 
 # To do: Add pushier (or more careful) cyclicity checks ?
 
