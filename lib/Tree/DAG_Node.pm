@@ -1,5 +1,5 @@
 
-# -*-Perl-*-  Time-stamp: "2001-02-23 11:34:46 MST"
+# -*-Perl-*-  Time-stamp: "2004-12-29 18:17:58 AST"
 
 require 5;
 package Tree::DAG_Node;
@@ -8,7 +8,7 @@ use strict;
 use vars qw(@ISA $Debug $VERSION);
 
 $Debug = 0;
-$VERSION = "1.04";
+$VERSION = "1.05";
 
 =head1 NAME
 
