@@ -1,5 +1,5 @@
 
-# -*-Perl-*-  Time-stamp: "2000-05-13 21:53:28 MDT"
+# -*-Perl-*-  Time-stamp: "2001-02-23 11:34:46 MST"
 
 require 5;
 package Tree::DAG_Node;
@@ -8,7 +8,7 @@ use strict;
 use vars qw(@ISA $Debug $VERSION);
 
 $Debug = 0;
-$VERSION = "1.03";
+$VERSION = "1.04";
 
 =head1 NAME
 
@@ -1236,7 +1236,7 @@ sub depth_under {
   $node->walk_down({
     '_depth' => 0,
     'callback' => sub {
-      my $depth = $_[0]->{'_depth'};
+      my $depth = $_[1]->{'_depth'};
       $max_depth = $depth if $depth > $max_depth;
       return 1;
     },
@@ -2919,11 +2919,15 @@ were published under those titles, but I'm I<assuming> that they're just
 later printings/editions of I<Algorithms + Data Structures =
 Programs>.)
 
-=head1 COPYRIGHT
+=head1 COPYRIGHT AND DISCLAIMER
 
-Copyright 1998,1999,2000 by Sean M. Burke C<sburke@cpan.org>, all
+Copyright 1998,1999,2000,2001 by Sean M. Burke C<sburke@cpan.org>, all
 rights reserved.  This program is free software; you can redistribute
 it and/or modify it under the same terms as Perl itself.
+
+This program is distributed in the hope that it will be useful, but
+without any warranty; without even the implied warranty of
+merchantability or fitness for a particular purpose.
 
 =head1 AUTHOR
 

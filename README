@@ -1,5 +1,5 @@
 README for Tree::DAG_Node
-                                        Time-stamp: "2000-05-13 22:00:02 MDT"
+                                        Time-stamp: "2001-02-23 11:37:30 MST"
 
 			    Tree::DAG_Node
 
@@ -89,6 +89,8 @@ Then you may need something like
   setenv PERLLIB "$HOME/perl"
 in your shell initialization file (e.g., ~/.cshrc).
 
+See perldoc perlmodinstall for more information on installing modules.
+
 
 DOCUMENTATION
 
@@ -117,5 +119,5 @@ Comprehensive Perl Archive Network (CPAN).  Visit
 
 COPYRIGHT
 
-Copyright 1998,1999,2000 by Sean M. Burke <sburke@cpan.org>, all
+Copyright 1998- by Sean M. Burke <sburke@cpan.org>, all
 rights reserved.
