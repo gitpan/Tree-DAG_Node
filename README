@@ -1,5 +1,5 @@
 README for Tree::DAG_Node
-                                        Time-stamp: "1998-10-27 19:51:47 MST"
+                                        Time-stamp: "1999-05-14 11:45:54 MDT"
 
 			    Tree::DAG_Node
 
@@ -85,6 +85,10 @@ something like this command:
 
   perl Makefile.PL LIB=~/perl
 
+Then you may need something like
+  setenv PERLLIB "$HOME/perl"
+in your shell initialization file (e.g., ~/.cshrc).
+
 
 DOCUMENTATION
 
@@ -113,5 +117,5 @@ Comprehensive Perl Archive Network (CPAN).  Visit
 
 COPYRIGHT
 
-Copyright 1998, Sean M. Burke <sburke@netadventure.net>, all rights
-reserved.
+Copyright 1998,1999 by Sean M. Burke <sburke@netadventure.net>, all
+rights reserved.

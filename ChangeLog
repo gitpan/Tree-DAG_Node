@@ -1,5 +1,5 @@
 Revision history for Perl extension Tree::DAG_Node.
-                                        Time-stamp: "1998-11-02 21:14:58 MST"
+                                        Time-stamp: "1999-05-14 11:42:26 MDT"
 
 1998-10-27  Sean M. Burke  sburke@netadventure.net
 
@@ -22,4 +22,22 @@ Revision history for Perl extension Tree::DAG_Node.
 	are now direct, for efficiency's sake.
 
 	Minor improvements to the docs.
+
+1999-05-14  Sean M. Burke  sburke@netadventure.net
+
+        * Releass 1.01 -- major additions:
+	
+	Scads of new methods.  Still (as far as I know) backward
+	compatible with all previous versions.  Some minor changes in
+	coding, not affecting the interface.
+
+	Hopefully more friendly to users that use -w (warnings).
+
+	Cautionary tale: I started making big changes to this right around
+	mid-November 1998.  But I kept thinking "oh, ONE MORE change and
+	then I'll release it."  Famous last words!  Other things came up,
+	I forgot what was new and what was different in this module
+	(which is why you don't see a detailed list of differences here),
+	altho apparently somehow I managed to document all the new
+	methods.
 
