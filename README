@@ -1,5 +1,5 @@
 README for Tree::DAG_Node
-                                        Time-stamp: "1999-05-14 11:45:54 MDT"
+                                        Time-stamp: "2000-05-13 22:00:02 MDT"
 
 			    Tree::DAG_Node
 
@@ -105,7 +105,7 @@ MacPerl site_lib or lib directory, and move DAG_Node.pm into there.
 SUPPORT
 
 Questions, bug reports, useful code bits, and suggestions for
-Tree::DAG_Node should just be sent to me at sburke@netadventure.net
+Tree::DAG_Node should just be sent to me at sburke@cpan.org
 
 
 AVAILABILITY
@@ -117,5 +117,5 @@ Comprehensive Perl Archive Network (CPAN).  Visit
 
 COPYRIGHT
 
-Copyright 1998,1999 by Sean M. Burke <sburke@netadventure.net>, all
+Copyright 1998,1999,2000 by Sean M. Burke <sburke@cpan.org>, all
 rights reserved.

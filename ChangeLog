@@ -1,5 +1,5 @@
 Revision history for Perl extension Tree::DAG_Node.
-                                        Time-stamp: "2000-03-05 16:35:54 MST"
+                                        Time-stamp: "2000-05-13 21:56:16 MDT"
 	
 1998-10-27  Sean M. Burke  sburke@netadventure.net
 
@@ -50,4 +50,29 @@ Revision history for Perl extension Tree::DAG_Node.
 
 	* Initialized a variable to '' to avoid warnings under -w.
 	Thanks to Gilles Lamiral.
+
+
+2000-05-13  Sean M. Burke  sburke@cpan.org
+
+	* Release 1.03 -- superficial changes:
+
+	* Minor doc spiffing-up.
+	
+	* Noting my new email address.
+
+	* In order to keep its symbol table clean, DAG_Node no longer
+	imports routines from Carp and UNIVERSAL.  Should have no effect
+	on existing code.
+
+	* I went and commented out all the places where I have asserts for
+	non-cyclicity.  I once had the idea that DAG_Node could be a base
+	class for graphs that /could/ allow cyclicity, or something like
+	that, so those assertions would apply for methods that work only
+	for acyclic networks.  But, in time, I realized that almost
+	everything in DAG_Node would have to have such assertions.  Moral
+	of the story: DAG_Node has nearly no code that it could share with
+	a class for anything but DAGs.  And since DAG_Node does everything it
+	can to /keep/ you from making cyclicities, there's no point in
+	constantly having assertions of noncyclicity (especially when
+	these assertions are rather expensive to check).
 

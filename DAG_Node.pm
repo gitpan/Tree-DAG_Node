@@ -1,18 +1,14 @@
-#!/usr/bin/perl
-# -*-Perl-*-  Time-stamp: "2000-03-05 16:08:52 MST"
 
-package Tree::DAG_Node;
+# -*-Perl-*-  Time-stamp: "2000-05-13 21:53:28 MDT"
+
 require 5;
-use Carp;
-use UNIVERSAL qw(can);
+package Tree::DAG_Node;
+use Carp ();
 use strict;
 use vars qw(@ISA $Debug $VERSION);
 
 $Debug = 0;
-$VERSION = "1.02";
-
-# To do: Add pushier (or more careful) cyclicity checks ?
-#  Or just do away with 'em altogether?
+$VERSION = "1.03";
 
 =head1 NAME
 
@@ -395,8 +391,8 @@ sub daughters { # read-only attrib-method: returns a list.
   my $this = shift;
 
   if(@_) { # undoc'd and disfavored to use as a write-method
-    croak "Don't set daughters with doughters anymore\n";
-    carp "my parameter must be a listref" unless ref($_[0]);
+    Carp::croak "Don't set daughters with doughters anymore\n";
+    Carp::carp "my parameter must be a listref" unless ref($_[0]);
     $this->{'daughters'} = $_[0];
     $this->_update_daughter_links;
   }
@@ -415,7 +411,7 @@ no mother -- i.e., if it is a root.
 
 sub mother { # read-only attrib-method: returns an object (the mother node)
   my $this = shift;
-  croak "I'm a read-only method!" if @_;
+  Carp::croak "I'm a read-only method!" if @_;
   return $this->{'mother'};
 }
 
@@ -524,7 +520,7 @@ sub _add_daughters_wrapper {
   # If $mother is [big number] generations down, then it's worth checking.
 
   foreach my $daughter (@daughters) { # which may be ()
-    croak "daughter must be a node object!" unless can($daughter, 'is_node');
+    Carp::croak "daughter must be a node object!" unless UNIVERSAL::can($daughter, 'is_node');
 
     printf "Mother  : %s (%s)\n", $mother, ref $mother if $Debug;
     printf "Daughter: %s (%s)\n", $daughter, ref $daughter if $Debug;
@@ -532,7 +528,7 @@ sub _add_daughters_wrapper {
       ($daughter->name() || $daughter),
       ($mother->name()   || $mother)     if $Debug > 1;
 
-    croak "mother can't be its own daughter!" if $mother eq $daughter;
+    Carp::croak "mother can't be its own daughter!" if $mother eq $daughter;
 
     $daughter->cyclicity_fault(
       "$daughter (" . ($daughter->name || 'no_name') .
@@ -571,7 +567,7 @@ sub _update_daughter_links {
    # not that there should ever be duplicate daughters anyhoo.
 
   foreach my $one (@$them) { # linkage bookkeeping
-    croak "daughter <$one> isn't an object!" unless ref $one;
+    Carp::croak "daughter <$one> isn't an object!" unless ref $one;
     $one->{'mother'} = $this;
   }
   return;
@@ -586,7 +582,7 @@ sub _update_links { # update all descendant links for ancestorship below
   # note: it's "descendant", not "descendent"
   # see <http://www.lenzo.com/~sburke/stuff/english_ant_and_ent.html>
   my $this = shift;
-  $this->no_cyclicity;
+  # $this->no_cyclicity;
   $this->walk_down({
     'callback' => sub {
       my $this = $_[0];
@@ -671,7 +667,7 @@ Not to be confused with $mother->clear_daughters.
 
 sub remove_daughters { # write-only method
   my($mother, @daughters) = @_;
-  croak "mother must be an object!" unless ref $mother;
+  Carp::croak "mother must be an object!" unless ref $mother;
   return unless @daughters;
 
   my %to_delete;
@@ -736,7 +732,7 @@ sub clear_daughters { # write-only method
 
   @{$mother->{'daughters'}} = ();
   foreach my $one (@daughters) {
-    next unless can($one, 'is_node'); # sanity check
+    next unless UNIVERSAL::can($one, 'is_node'); # sanity check
     $one->{'mother'} = undef;
   }
   # Another, simpler, way to do it:
@@ -1005,7 +1001,7 @@ sub attributes { # read/write attribute-method
   # expects a ref, presumably a hashref
   my $this = shift;
   if(@_) {
-    carp "my parameter must be a reference" unless ref($_[0]);
+    Carp::carp "my parameter must be a reference" unless ref($_[0]);
     $this->{'attributes'} = $_[0];
   }
   return $this->{'attributes'};
@@ -1028,7 +1024,7 @@ sub no_cyclicity { # croak iff I'm in a CYCLIC class.
   my($it) = $_[0];
   # If, God forbid, I use this to make a cyclic class, then I'd
   # expand the functionality of this routine to actually look for
-  # cyclicity.  Or something like that.
+  # cyclicity.  Or something like that.  Maybe.
 
   $it->cyclicity_fault("You can't do that in a cyclic class!")
     if $it->cyclicity_allowed;
@@ -1037,7 +1033,7 @@ sub no_cyclicity { # croak iff I'm in a CYCLIC class.
 
 sub cyclicity_fault {
   my($it, $bitch) = @_[0,1];
-  croak "Cyclicity fault: $bitch"; # never return
+  Carp::croak "Cyclicity fault: $bitch"; # never return
 }
 
 sub cyclicity_allowed {
@@ -1100,7 +1096,7 @@ sub ancestors {
   my $mama = $this->{'mother'}; # initial condition
   return () unless ref($mama); # I must be root!
 
-  $this->no_cyclicity; # avoid infinite loops
+  # $this->no_cyclicity; # avoid infinite loops
 
   # Could be defined recursively, as:
   # if(ref($mama = $this->{'mother'})){
@@ -1166,9 +1162,9 @@ sub self_and_descendants {
   # read-only method:  return a list of myself and any/all descendants
   my $node = shift;
   my @List = ();
-  $node->no_cyclicity;
+  # $node->no_cyclicity;
   $node->walk_down({ 'callback' => sub { push @List, $_[0]; return 1;}});
-  croak "Spork Error 919: \@List has no contents!?!?" unless @List;
+  Carp::croak "Spork Error 919: \@List has no contents!?!?" unless @List;
     # impossible
   return @List;
 }
@@ -1208,7 +1204,7 @@ sub leaves_under {
   # Returns myself in the degenerate case of being a leaf myself.
   my $node = shift;
   my @List = ();
-  $node->no_cyclicity;
+  # $node->no_cyclicity;
   $node->walk_down({ 'callback' =>
     sub {
       my $node = $_[0];
@@ -1217,7 +1213,7 @@ sub leaves_under {
       return 1;
     }
   });
-  croak "Spork Error 861: \@List has no contents!?!?" unless @List;
+  Carp::croak "Spork Error 861: \@List has no contents!?!?" unless @List;
     # impossible
   return @List;
 }
@@ -1290,7 +1286,7 @@ ancestor of $node, it behaves as if you called just $node->generation().
 
 sub generation {
   my($node, $limit) = @_[0,1]; 
-  $node->no_cyclicity;
+  # $node->no_cyclicity;
   return $node
     if $node eq $limit || not(
 			      defined($node->{'mother'}) &&
@@ -1544,8 +1540,8 @@ sub address {
     my $root = $it->root;
     my @parts = map {$_ + 0}
                     $address =~ m/(\d+)/g; # generous!
-    croak "Address \"$address\" is an ill-formed address" unless @parts;
-    croak "Address \"$address\" must start with '0'" unless shift(@parts) == 0;
+    Carp::croak "Address \"$address\" is an ill-formed address" unless @parts;
+    Carp::croak "Address \"$address\" must start with '0'" unless shift(@parts) == 0;
 
     my $current_node = $root;
     while(@parts) { # no-op for root
@@ -1604,8 +1600,8 @@ sub common { # Return the lowest node common to all these nodes...
   @ones{ @ones } = undef;
 
   foreach my $node (@others) {
-    croak "TILT: node \"$node\" is not a node"
-      unless can($node, 'is_node');
+    Carp::croak "TILT: node \"$node\" is not a node"
+      unless UNIVERSAL::can($node, 'is_node');
     my %first_lineage;
     @first_lineage{$first, $first->ancestors} = undef;
     my $higher = undef; # the common of $first and $node
@@ -1677,7 +1673,7 @@ sub common_ancestor {
 
 =item $node->walk_down({ callback => \&foo, callbackback => \&foo, ... })
 
-Performs a depth-first recursion of the structure at and under $node.
+Performs a depth-first traversal of the structure at and under $node.
 What it does at each node depends on the value of the options hashref,
 which you must provide.  There are three options, "callback" and
 "callbackback" (at least one of which must be defined, as a sub
@@ -1698,16 +1694,18 @@ When this returns, decrements C<_depth>.
 
 * If there's a C<callbackback>, call just it as with C<callback> (but
 tossing out the return value).  Note that C<callback> returning false
-blocks recursion below $node, but doesn't block calling callbackback
+blocks traversal below $node, but doesn't block calling callbackback
 for $node.  (Incidentally, in the unlikely case that $node has stopped
 being a node object, C<callbackback> won't get called.)
 
 * Return.
 
 $node->walk_down is the way to recursively do things to a tree (if you
-start at the root) or part of a tree.  It's even the basis for plenty
-of the methods in this class.  See the source code for examples both
-simple and horrific.
+start at the root) or part of a tree; if what you're doing is best done
+via pre-pre order traversal, use C<callback>; if what you're doing is
+best done with post-order traversal, use C<callbackback>.
+C<walk_down> is even the basis for plenty of the methods in this
+class.  See the source code for examples both simple and horrific.
 
 Note that if you don't specify C<_depth>, it effectively defaults to
 0.  You should set it to scalar($node->ancestors) if you want
@@ -1717,8 +1715,11 @@ difference, of course.)
 
 And B<by the way>, it's a bad idea to modify the tree from the callback.
 Unpredictable things may happen.  I instead suggest having your callback
-adding to a stack where things need changing, and then, once C<walkdown>
+add to a stack of things that need changing, and then, once C<walk_down>
 is all finished, changing those nodes from that stack.
+
+Note that the existence of C<walk_down> doesn't mean you can't write
+you own special-use traversers.
 
 =cut
 
@@ -1728,11 +1729,11 @@ sub walk_down {
   # All the can()s are in case an object changes class while I'm
   # looking at it.
 
-  croak "I need options!" unless ref($o);
-  croak "I need a callback or a callbackback" unless
+  Carp::croak "I need options!" unless ref($o);
+  Carp::croak "I need a callback or a callbackback" unless
     ( ref($o->{'callback'}) || ref($o->{'callbackback'}) );
 
-  $this->no_cyclicity;
+  # $this->no_cyclicity;
   my $callback = ref($o->{'callback'}) ? $o->{'callback'} : undef;
   my $callbackback = ref($o->{'callbackback'}) ? $o->{'callbackback'} : undef;
   my $callback_status = 1;
@@ -1745,12 +1746,12 @@ sub walk_down {
   if($callback_status) {
     # Keep recursing unless callback returned false... and if there's
     # anything to recurse into, of course.
-    my @daughters = can($this, 'is_node') ? @{$this->{'daughters'}} : ();
+    my @daughters = UNIVERSAL::can($this, 'is_node') ? @{$this->{'daughters'}} : ();
     if(@daughters) {
       $o->{'_depth'} += 1;
       #print "Depth " , $o->{'_depth'}, "\n";
       foreach my $one (@daughters) {
-        $one->walk_down($o) if can($one, 'is_node');
+        $one->walk_down($o) if UNIVERSAL::can($one, 'is_node');
         # and if it can do "is_node", it should provide a walk_down!
       }
       $o->{'_depth'} -= 1;
@@ -1761,7 +1762,7 @@ sub walk_down {
 
   # Note that $callback_status doesn't block callbackback from being called
   if($callbackback){
-    if(can($this, 'is_node')) { # if it's still a node!
+    if(UNIVERSAL::can($this, 'is_node')) { # if it's still a node!
       print "* Calling callbackback\n" if $Debug;
       scalar( &{ $callbackback }( $this, $o ) );
       # scalar to give it the same context as callback
@@ -1771,7 +1772,7 @@ sub walk_down {
     }
   }
   if($Debug) {
-    if(can($this, 'is_node')) { # if it's still a node!
+    if(UNIVERSAL::can($this, 'is_node')) { # if it's still a node!
       printf "* Leaving %s\n", ($this->name || $this)
     } else {
       print "* Leaving [no longer a node]\n";
@@ -1888,7 +1889,7 @@ sub random_network { # constructor or method.
   my $max_children = $o->{'max_children'} || 4;
   my $max_node_count = $o->{'max_node_count'} || 25;
 
-  croak "max_children has to be positive" if int($max_children) < 1;
+  Carp::croak "max_children has to be positive" if int($max_children) < 1;
 
   my @mothers = ( $root );
   my @children = ( );
@@ -2342,7 +2343,7 @@ sub draw_ascii_tree {
   my(@box, @daughter_boxes, $width, @daughters);
   @daughters = @{$it->{'daughters'}};
 
-  $it->no_cyclicity;
+  # $it->no_cyclicity;
 
   $o->{'no_name'}   = 0 unless exists $o->{'no_name'};
   $o->{'h_spacing'} = 1 unless exists $o->{'h_spacing'};
@@ -2658,7 +2659,7 @@ sub copy {
       if($attrib_copy eq 'HASH') {
         $to->{'attributes'} = { %{$to->{'attributes'}} };
         # dupe the hashref
-      } elsif ($attrib_copy = can($to->{'attributes'}, 'copy') ) {
+      } elsif ($attrib_copy = UNIVERSAL::can($to->{'attributes'}, 'copy') ) {
         # $attrib_copy now points to the copier method
         $to->{'attributes'} = &{$attrib_copy}($from);
       } # otherwise I don't know how to copy it; leave as is
@@ -2867,7 +2868,7 @@ Currently I don't assume (or enforce) anything about the class
 membership of nodes being manipulated, other than by testing whether
 each one provides a method C<is_node>, a la:
 
-  die "Not a node!!!" unless &UNIVERSAL::can($node, "is_node");
+  die "Not a node!!!" unless UNIVERSAL::can($node, "is_node");
 
 So, as far as I'm concerned, a given tree's nodes are free to belong to
 different classes, just so long as they provide/inherit C<is_node>, the
@@ -2893,15 +2894,40 @@ its address), you can to override the C<name> method, without causing
 problems.  (Be sure to consider the case of $obj->name as a write
 method, as it's used in C<lol_to_tree> and C<random_network>.)
 
+=head1 SEE ALSO
+
+L<HTML::Element>
+
+Wirth, Niklaus.  1976.  I<Algorithms + Data Structures = Programs>
+Prentice-Hall, Englewood Cliffs, NJ.
+
+Knuth, Donald Ervin.  1997.  I<Art of Computer Programming, Volume 1,
+Third Edition: Fundamental Algorithms>.  Addison-Wesley,  Reading, MA.
+
+Wirth's classic, currently and lamentably out of print, has a good
+section on trees.  I find it clearer than Knuth's (if not quite as
+encyclopedic), probably because Wirth's example code is in a
+block-structured high-level language (basically Pascal), instead
+of in assembler (MIX).
+
+Until some kind publisher brings out a new printing of Wirth's book,
+try poking around used bookstores (or C<www.abebooks.com>) for a copy.
+I think it was also republished in the 1980s under the title
+I<Algorithms and Data Structures>, and in a German edition called
+I<Algorithmen und Datenstrukturen>.  (That is, I'm sure books by Knuth
+were published under those titles, but I'm I<assuming> that they're just
+later printings/editions of I<Algorithms + Data Structures =
+Programs>.)
+
 =head1 COPYRIGHT
 
-Copyright 1998,1999 by Sean M. Burke C<sburke@netadventure.net>, all
+Copyright 1998,1999,2000 by Sean M. Burke C<sburke@cpan.org>, all
 rights reserved.  This program is free software; you can redistribute
 it and/or modify it under the same terms as Perl itself.
 
 =head1 AUTHOR
 
-Sean M. Burke C<sburke@netadventure.net>
+Sean M. Burke C<sburke@cpan.org>
 
 =cut
 
