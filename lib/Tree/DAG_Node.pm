@@ -1,6 +1,3 @@
-
-# -*-Perl-*-  Time-stamp: "2004-12-29 18:17:58 AST"
-
 require 5;
 package Tree::DAG_Node;
 use Carp ();
@@ -8,7 +5,7 @@ use strict;
 use vars qw(@ISA $Debug $VERSION);
 
 $Debug = 0;
-$VERSION = "1.05";
+$VERSION = '1.06';
 
 =head1 NAME
 
@@ -2837,8 +2834,8 @@ so you'll get an error there.)
 =head1 BUG REPORTS
 
 If you find a bug in this library, report it to me as soon as possible,
-at the address listed in the AUTHOR section, below.  Please try to be
-as specific as possible about how you got the bug to occur.
+at the address listed in the MAINTAINER section, below.  Please try to
+be as specific as possible about how you got the bug to occur.
 
 =head1 HELP!
 
@@ -2919,19 +2916,24 @@ were published under those titles, but I'm I<assuming> that they're just
 later printings/editions of I<Algorithms + Data Structures =
 Programs>.)
 
-=head1 COPYRIGHT AND DISCLAIMER
+=head1 MAINTAINER
 
-Copyright 1998,1999,2000,2001 by Sean M. Burke C<sburke@cpan.org>, all
-rights reserved.  This program is free software; you can redistribute
-it and/or modify it under the same terms as Perl itself.
+David Hand, C<< <cogent@cpan.org> >>
+
+=head1 AUTHOR
+
+Sean M. Burke, C<< <sburke@cpan.org> >>
+
+=head1 COPYRIGHT, LICENSE, AND DISCLAIMER
+
+Copyright 1998-2001, 2004, 2007 by Sean M. Burke and David Hand.
+
+This program is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.
 
 This program is distributed in the hope that it will be useful, but
 without any warranty; without even the implied warranty of
 merchantability or fitness for a particular purpose.
-
-=head1 AUTHOR
-
-Sean M. Burke C<sburke@cpan.org>
 
 =cut
 

@@ -1,7 +1,7 @@
 README for Tree::DAG_Node
-                                        Time-stamp: "2001-02-23 11:37:30 MST"
 
 			    Tree::DAG_Node
+			     version 1.06
 
 [Partially excerpted from the POD.]
 
@@ -107,17 +107,19 @@ MacPerl site_lib or lib directory, and move DAG_Node.pm into there.
 SUPPORT
 
 Questions, bug reports, useful code bits, and suggestions for
-Tree::DAG_Node should just be sent to me at sburke@cpan.org
+Tree::DAG_Node should just be sent to David Hand, <cogent@cpan.org>.
 
 
 AVAILABILITY
 
-The latest version of Tree::DAG_Node is available from the
-Comprehensive Perl Archive Network (CPAN).  Visit
-<http://www.perl.com/CPAN/> to find a CPAN site near you.
+The latest version of Tree::DAG_Node is available from the Comprehensive
+Perl Archive Network (CPAN).  Visit <http://www.perl.com/CPAN/> to find
+a CPAN site near you.
 
 
-COPYRIGHT
+COPYRIGHT AND LICENSE
 
-Copyright 1998- by Sean M. Burke <sburke@cpan.org>, all
-rights reserved.
+Copyright 1998-2001, 2004, 2007 by Sean M. Burke and David Hand.
+
+This program is free software; you can redistribute it and/or modify it
+under the same terms as Perl itself.

@@ -3,5 +3,5 @@ Makefile(\.old)?$
 \.rej$
 CVS
 blib
-~
-
+~$
+.svn
