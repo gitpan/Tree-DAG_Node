@@ -1,0 +1,85 @@
+Revision history for Perl module Tree::DAG_Node.
+
+1.07  Thu Nov  1 12:47:00 2012
+	- New maintainer: Ron Savage
+	- Pre-emptive apologies for any changes which are not back-compat. No such problems are expected, but the
+		introduction of new methods may disconcert some viewers.
+	- Fix RT#78858, reported by Gene Boggs. Audit code for similar problems.
+	- Fix RT#79506. reported by Ron Savage.
+	- Rename ChangeLog to CHANGES, and add Changelog.ini.
+	- Replace all uses of cyclicity_fault() and Carp::croak with die.
+	- Remove unused methods: decommission_root(), cyclicity_allowed(), cyclicity_fault(), inaugurate_root(),
+		no_cyclicity() and _update_links(). OK - cyclicity_fault() was called once. It just died.
+	- Add methods: format_node(), hashref2string(), is_root(), node2string(), tree2string().
+		tree2string($opts, $node) - unlike draw_ascii_tree() - can optionally print the tree starting at any node.
+		Override format_node(), hashref2string(), and node2string() if desired.
+	- Reformat the POD big-time.
+	- Add Build.PL.
+	- Re-write Makefile.PL.
+	- Remove use vars(@ISA $Debug $VERSION). Replace latter 2 with 'our ...'.
+	- Rename t/00_about_verbose.t to t/about.perl.t.
+	- Add scripts/cut.and.paste.subtrees.pl. Warning: Some trees get into an infinite loop.
+	- Add t/cut.and.paste.subtrees.t.        Warning: Some trees get into an infinite loop.
+	- Document the options (discouraged by Sean) supported in the call to new($hashref).
+
+1.06  Sun Dec  2 12:00:00 1998
+	- New maintainer: David Hand.
+	- No code changes.
+
+1.05  Wed Dec 29 12:00:00 1998
+	- Just repackaging.
+	- No code changes.
+
+1.04  Fri Feb 23 12:00:00 1998
+	- Bugfix: Olegt@dreamtime.net notes a bug in
+		depth_under that apparently always makes it return 0.
+
+1.03  Sat May 13 12:00:00 1998
+	- Superficial changes:
+		Minor doc spiffing-up.
+		Noting my new email address.
+	- In order to keep its symbol table clean, DAG_Node no longer
+		imports routines from Carp and UNIVERSAL.  Should have no effect on existing code.
+	- I went and commented out all the places where I have asserts for
+		non-cyclicity.  I once had the idea that DAG_Node could be a base
+		class for graphs that /could/ allow cyclicity, or something like
+		that, so those assertions would apply for methods that work only
+		for acyclic networks.  But, in time, I realized that almost
+		everything in DAG_Node would have to have such assertions.  Moral
+		of the story: DAG_Node has nearly no code that it could share with
+		a class for anything but DAGs.  And since DAG_Node does everything it
+		can to /keep/ you from making cyclicities, there's no point in
+		constantly having assertions of noncyclicity (especially when
+		these assertions are rather expensive to check).
+
+1.02  Sun Mar  05 12:00:00 1998
+	- Minor bugfixes:
+		Fixed a typo in the docs: corrected one "right_sisters" to "right_sister"
+		Initialized a variable to '' to avoid warnings under -w. Thanks to Gilles Lamiral.
+
+1.01  Fri May 14 12:00:00 1998
+	- Major additions:
+		Scads of new methods.  Still (as far as I know) backward
+		compatible with all previous versions.  Some minor changes in
+		coding, not affecting the interface.
+	- Hopefully more friendly to users that use -w (warnings).
+	- Cautionary tale: I started making big changes to this right around
+		mid-November 1998.  But I kept thinking "oh, ONE MORE change and
+		then I'll release it."  Famous last words!  Other things came up,
+		I forgot what was new and what was different in this module
+		(which is why you don't see a detailed list of differences here),
+		altho apparently somehow I managed to document all the new methods.
+
+0.75  Tue Nov  3 12:00:00 1998
+	- Minor changes:
+		New methods new_daughter, new_daughter_left.
+		$obj->new constructor syntax now documented.
+		Internal accesses to "daughter" and "mother" attribs are now direct, for efficiency's sake.
+	- Minor improvements to the docs.
+
+0.74  Wed Oct 28 12:00:00 1998
+	- Whoops, forgot to bundle the README.
+	- No change in the code.
+
+0.73  Tue Oct 27 12:00:00 1998
+	- First release.

@@ -1,9 +1,14 @@
-ChangeLog
+Build.PL
+Changelog.ini
+CHANGES
 lib/Tree/DAG_Node.pm
 Makefile.PL
-MANIFEST
-MANIFEST.SKIP
+MANIFEST			This list of files
+META.json
+META.yml
 README
-t/00_about_verbose.t
-t/01_old_junk.t
-META.yml                                 Module meta-data (added by MakeMaker)
+scripts/cut.and.paste.subtrees.pl
+t/about.perl.t
+t/cut.and.paste.subtrees.t
+t/load.t
+t/pod.t

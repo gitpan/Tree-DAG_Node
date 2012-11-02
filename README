@@ -21,7 +21,7 @@ This is what I mean by a "tree structure", a bit redundantly stated:
 
     * A tree is a network of nodes where there's exactly one root node
     (i.e., 'the top'), and the only primary relationship between nodes
-    is the mother-daugher relationship.
+    is the mother-daughter relationship.
 
     * No node can be its own mother, or its mother's mother, etc.
 

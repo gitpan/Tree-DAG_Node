@@ -1,16 +1,26 @@
---- #YAML:1.0
-name:                Tree-DAG_Node
-version:             1.06
-abstract:            (super)class for representing nodes in a tree
-license:             perl
-generated_by:        ExtUtils::MakeMaker version 6.36
-distribution_type:   module
-requires:     
-    Carp:                          0
-    strict:                        0
-    vars:                          0
-meta-spec:
-    url:     http://module-build.sourceforge.net/META-spec-v1.2.html
-    version: 1.2
+---
+abstract: 'An N-ary tree'
 author:
-    - David Hand, <cogent@cpan.org>
+  - 'Sean M. Burke <sburke@cpan.org>'
+build_requires:
+  Test::More: 0.94
+  Test::Pod: 1.44
+configure_requires:
+  Module::Build: 0.38
+dynamic_config: 1
+generated_by: 'Module::Build version 0.4003, CPAN::Meta::Converter version 2.120630'
+license: perl
+meta-spec:
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
+name: Tree-DAG_Node
+provides:
+  Tree::DAG_Node:
+    file: lib/Tree/DAG_Node.pm
+    version: 1.07
+requires:
+  strict: 1.04
+  warnings: 1.12
+resources:
+  license: http://dev.perl.org/licenses/
+version: 1.07
