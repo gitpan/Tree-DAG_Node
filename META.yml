@@ -17,10 +17,10 @@ name: Tree-DAG_Node
 provides:
   Tree::DAG_Node:
     file: lib/Tree/DAG_Node.pm
-    version: 1.07
+    version: 1.08
 requires:
   strict: 1.04
   warnings: 1.12
 resources:
   license: http://dev.perl.org/licenses/
-version: 1.07
+version: 1.08

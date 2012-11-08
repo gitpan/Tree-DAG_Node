@@ -1,5 +1,10 @@
 Revision history for Perl module Tree::DAG_Node.
 
+1.08  Thu Nov  8 12:38:00 2012
+	- No code changes.
+	- For pre-reqs such as strict, warnings, etc, which ship with Perl, set the version # to 0.
+		Reported as RT#80663 by Father Chrysostomos for Tree::DAG_Node.
+
 1.07  Thu Nov  1 12:47:00 2012
 	- New maintainer: Ron Savage
 	- Pre-emptive apologies for any changes which are not back-compat. No such problems are expected, but the
