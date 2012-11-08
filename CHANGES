@@ -1,5 +1,9 @@
 Revision history for Perl module Tree::DAG_Node.
 
+1.09  Thu Nov  8 12:38:00 2012
+	- No code changes.
+	- Oops. The changes in V 1.08 we made in the other 10 distros, but not in this one. My apologies.
+
 1.08  Thu Nov  8 12:38:00 2012
 	- No code changes.
 	- For pre-reqs such as strict, warnings, etc, which ship with Perl, set the version # to 0.

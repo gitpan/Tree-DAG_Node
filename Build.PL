@@ -17,7 +17,7 @@ Module::Build -> new
 	},
 	requires =>
 	{
-		strict   => 1.04,
-		warnings => 1.12,
+		strict   => 0,
+		warnings => 0,
 	},
 ) -> create_build_script();

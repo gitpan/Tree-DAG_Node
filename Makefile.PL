@@ -24,10 +24,10 @@ WriteMakefile
 	PL_FILES  => {},
 	PREREQ_PM =>
 	{
-		strict     => 1.04,
+		strict     => 0,
 		Test::More => 0.94,
 		Test::Pod  => 1.44,
-		warnings   => 1.12,
+		warnings   => 0,
 	},
 	VERSION_FROM => 'lib/Tree/DAG_Node.pm',
 );
