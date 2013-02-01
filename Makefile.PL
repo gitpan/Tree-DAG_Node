@@ -21,12 +21,13 @@ WriteMakefile
 	},
 	DISTNAME  => 'Tree-DAG_Node',
 	NAME      => 'Tree::DAG_Node',
+	LICENSE   => 'artistic_2',
 	PL_FILES  => {},
 	PREREQ_PM =>
 	{
 		strict     => 0,
-		Test::More => 0.94,
-		Test::Pod  => 1.44,
+		Test::More => 0.98,
+#		Test::Pod  => 1.45, # See t/pod.t.
 		warnings   => 0,
 	},
 	VERSION_FROM => 'lib/Tree/DAG_Node.pm',

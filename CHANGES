@@ -1,5 +1,9 @@
 Revision history for Perl module Tree::DAG_Node.
 
+1.10  Fri Feb  1 08:53:00 2012
+	- Change t/pod.t to look for Test::Pod 1.45, but comment out Test::Pod in Build.PL and Makefile.PL.
+		This means Test::Pod is not used at all if it is not installed. As per RT#83077.
+
 1.09  Thu Nov  8 12:38:00 2012
 	- No code changes.
 	- Oops. The changes in V 1.08 we made in the other 10 distros, but not in this one. My apologies.

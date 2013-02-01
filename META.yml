@@ -3,13 +3,12 @@ abstract: 'An N-ary tree'
 author:
   - 'Sean M. Burke <sburke@cpan.org>'
 build_requires:
-  Test::More: 0.94
-  Test::Pod: 1.44
+  Test::More: 0.98
 configure_requires:
   Module::Build: 0.38
 dynamic_config: 1
-generated_by: 'Module::Build version 0.4003, CPAN::Meta::Converter version 2.120630'
-license: perl
+generated_by: 'Module::Build version 0.4003, CPAN::Meta::Converter version 2.120921'
+license: artistic_2
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
@@ -17,10 +16,10 @@ name: Tree-DAG_Node
 provides:
   Tree::DAG_Node:
     file: lib/Tree/DAG_Node.pm
-    version: 1.09
+    version: 1.10
 requires:
   strict: 0
   warnings: 0
 resources:
-  license: http://dev.perl.org/licenses/
-version: 1.09
+  license: http://www.perlfoundation.org/artistic_license_2_0
+version: 1.10
