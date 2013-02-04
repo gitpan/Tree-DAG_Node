@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 our $Debug   = 0;
-our $VERSION = '1.10';
+our $VERSION = '1.11';
 
 # -----------------------------------------------
 
@@ -3178,8 +3178,8 @@ Sean M. Burke, C<< <sburke@cpan.org> >>
 
 Copyright 1998-2001, 2004, 2007 by Sean M. Burke and David Hand.
 
-This program is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
+This program is free software. It is released under the Artistic License 2.0.
+See L<http://opensource.org/licenses/Artistic-2.0>.
 
 This program is distributed in the hope that it will be useful, but
 without any warranty; without even the implied warranty of

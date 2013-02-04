@@ -1,6 +1,11 @@
 Revision history for Perl module Tree::DAG_Node.
 
-1.10  Fri Feb  1 08:53:00 2012
+1.11  Mon Feb  4 09:50:00 2013
+	- Correct the date (2012 -> 2013) in this file used for V 1.10.
+	- Correct the text at L<Tree::DAG_Node/AUTHOR> so it refers to Artistic License 2.0,
+		which now matches what it says in Build.PL and Makefile.PL. Resolves RT#83088.
+
+1.10  Fri Feb  1 08:53:00 2013
 	- Change t/pod.t to look for Test::Pod 1.45, but comment out Test::Pod in Build.PL and Makefile.PL.
 		This means Test::Pod is not used at all if it is not installed. As per RT#83077.
 
