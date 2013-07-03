@@ -4,7 +4,7 @@
       "Sean M. Burke <sburke@cpan.org>"
    ],
    "dynamic_config" : 1,
-   "generated_by" : "Module::Build version 0.4003, CPAN::Meta::Converter version 2.120921",
+   "generated_by" : "Module::Build version 0.4005, CPAN::Meta::Converter version 2.131560",
    "license" : [
       "artistic_2"
    ],
@@ -34,7 +34,7 @@
    "provides" : {
       "Tree::DAG_Node" : {
          "file" : "lib/Tree/DAG_Node.pm",
-         "version" : "1.11"
+         "version" : "1.12"
       }
    },
    "release_status" : "stable",
@@ -43,5 +43,5 @@
          "http://www.perlfoundation.org/artistic_license_2_0"
       ]
    },
-   "version" : "1.11"
+   "version" : "1.12"
 }

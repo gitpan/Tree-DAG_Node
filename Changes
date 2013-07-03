@@ -1,5 +1,12 @@
 Revision history for Perl module Tree::DAG_Node.
 
+1.12  Wed Jul  3 16:38:00 2013
+	- Change text in README referring to licence to match text in body of source, since it was in conflict
+		with the Artistic Licence V 2.0.
+		This was requested by Petr Pisar who packages stuff for Red Hat.
+	- Rename CHANGES to Changes as per CPAN::Changes::SPEC.
+	- Various spelling fixes in the docs, as kindly reported by dsteinbrunner.
+
 1.11  Mon Feb  4 09:50:00 2013
 	- Correct the date (2012 -> 2013) in this file used for V 1.10.
 	- Correct the text at L<Tree::DAG_Node/AUTHOR> so it refers to Artistic License 2.0,

@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 our $Debug   = 0;
-our $VERSION = '1.11';
+our $VERSION = '1.12';
 
 # -----------------------------------------------
 
@@ -1674,7 +1674,7 @@ Specifically, unless the documentation for a particular method says
 "this method returns thus-and-such a value", then you should not rely on
 it returning anything meaningful.
 
-A I<passing> acquintance with at least the broader details of the source
+A I<passing> acquaintance with at least the broader details of the source
 code for this class is assumed for anyone using this class as a base
 class -- especially if you're overriding existing methods, and
 B<definitely> if you're overriding linkage methods.
@@ -1763,7 +1763,7 @@ superclass's _init method, and then initializes the new attributes:
 
 In other words, I like to have each attribute initialized thru a
 method named _init_[attribute], which should expect the object as
-$_[0] and the the options hashref (or {} if none was given) as $_[1].
+$_[0] and the options hashref (or {} if none was given) as $_[1].
 If you insist on having your _init recognize options for setting
 attributes, you might as well have them dealt with by the appropriate
 _init_[attribute] method, like this:
@@ -1825,7 +1825,7 @@ to N2; it also means that N1 stops being anything else's daughter as
 it becomes N2's daughter.
 
 If you try to make a node its own mother, a fatal error results.  If
-you try to take one of a a node N1's ancestors and make it also a
+you try to take one of a node N1's ancestors and make it also a
 daughter of N1, a fatal error results.  A fatal error results if
 anything in LIST isn't a node object.
 
@@ -1870,7 +1870,7 @@ An exact synonym for L</add_right_sisters(LIST)>.
 
 =head2 add_right_sisters(LIST)
 
-Just like add_left_sisters (which see), except that the the elements
+Just like add_left_sisters (which see), except that the elements
 in LIST (in that order) as immediate B<right> sisters of $node;
 
 In other words, given that B's mother's daughter-list is (A,B,C,D),
@@ -1925,7 +1925,7 @@ Also note that the address of a node in a tree is meaningful only in
 that tree as currently structured.
 
 (Consider how ($address1 cmp $address2) may be magically meaningful
-to you, if you mant to figure out what nodes are to the right of what
+to you, if you meant to figure out what nodes are to the right of what
 other nodes.)
 
 =head2 ancestors()
@@ -1964,7 +1964,7 @@ to {}.)  Instead you can just do...
 =head2 clear_daughters()
 
 This unlinks all $mother's daughters.
-Returns the the list of what used to be $mother's daughters.
+Returns the list of what used to be $mother's daughters.
 
 Not to be confused with L</remove_daughters(LIST)>.
 
@@ -2195,7 +2195,7 @@ Default: 0.
 =item o tick -- a string to preface each entry with
 
 This string goes between the indenting-spacing and the node's name.  You
-may prefer "*" or "-> " or someting.
+may prefer "*" or "-> " or something.
 
 Default: ''.
 
@@ -2572,7 +2572,7 @@ affected my replace_with -- they can be affected in this case:
   $node->replace_with($N1, $N2, $N3);
 
 As a side affect of attaching $N1 and $N2 to $node's mother, they're
-unlinked from their parents ($node, and $N1, replectively).
+unlinked from their parents ($node, and $N1, respectively).
 But N3's daughter list is unaffected.
 
 In other words, this method does what it has to, as you'd expect it
@@ -2706,7 +2706,7 @@ this:
   print $tree->tree_to_lol_notation, "\n";
 
 prints the following (which I've broken over two lines for sake of
-printablitity of documentation):
+printability of documentation):
 
   [[[['Det:The'], [['dog'], 'N'], 'NP'], [["/with rabies\x5c"],
   'PP'], 'NP'], [['died'], 'VP'], 'S'],
@@ -2848,7 +2848,7 @@ This is what I<walk_down()> does, in pseudocode form:
 
 =over 4
 
-=item o Starting pount
+=item o Starting point
 
 Start at the $node given.
 
