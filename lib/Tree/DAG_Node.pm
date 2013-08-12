@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 our $Debug   = 0;
-our $VERSION = '1.12';
+our $VERSION = '1.13';
 
 # -----------------------------------------------
 
@@ -652,7 +652,7 @@ sub format_node
 {
 	my($self, $options, $node) = @_;
 	my($s) = $node -> name;
-	$s     .= '. Attributes: ' . $self -> hashref2string($node -> attributes) if (! defined $$options{no_attributes});
+	$s     .= '. Attributes: ' . $self -> hashref2string($node -> attributes) if (! $$options{no_attributes});
 
 	return $s;
 
@@ -1387,8 +1387,9 @@ sub tree_to_lol_notation {
 sub tree2string
 {
 	my($self, $options, $tree) = @_;
-	$options ||= {};
-	$tree    ||= $self;
+	$options                   ||= {};
+	$$options{no_attributes}   ||= 0;
+	$tree                      ||= $self;
 
 	my(@out);
 	my(@vert_dashes);
@@ -2222,9 +2223,9 @@ Possible keys in the $options hashref:
 
 =over 4
 
-=item o no_attributes
+=item o no_attributes => $Boolean
 
-If given a true value, the node's attributes are not included in the string returned.
+If 1, the node's attributes are not included in the string returned.
 
 Default: 0 (include attributes).
 
@@ -2465,9 +2466,9 @@ Possible keys in the $options hashref:
 
 =over 4
 
-=item o no_attributes
+=item o no_attributes => $Boolean
 
-If given a true value, the node's attributes are not included in the string returned.
+If 1, the node's attributes are not included in the string returned.
 
 Default: 0 (include attributes).
 
@@ -2817,9 +2818,9 @@ Possible keys in the $options hashref (which defaults to {}):
 
 =over 4
 
-=item o no_attributes
+=item o no_attributes => $Boolean
 
-If given a true value, the node's attributes are not included in the string returned.
+If 1, the node's attributes are not included in the string returned.
 
 Default: 0 (include attributes).
 
