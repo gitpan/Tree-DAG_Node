@@ -2,7 +2,7 @@
 require 5;
 # Summary of, well, things.
 
-use Test;
+use Test::More;
 BEGIN {plan tests => 2};
 ok 1;
 
@@ -36,7 +36,7 @@ use Tree::DAG_Node;
     next if $this eq 'main'; # %main:: is %::
 
     #print "Peeking at $this => ${$this . '::VERSION'}\n";
-    
+
     if(defined ${$this . '::VERSION'} ) {
       $v{$this} = ${$this . '::VERSION'}
     } elsif(
@@ -50,7 +50,7 @@ use Tree::DAG_Node;
       # It's probably an unpopulated package.
       ## $v{$this} = '...';
     }
-    
+
     $pref = length($this) ? "$this\::" : '';
     push @stack, map m/^(.+)::$/ ? "$pref$1" : (), keys %{$this . '::'};
     #print "Stack: @stack\n";

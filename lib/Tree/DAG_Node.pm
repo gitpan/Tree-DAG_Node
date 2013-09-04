@@ -2,9 +2,13 @@ package Tree::DAG_Node;
 
 use strict;
 use warnings;
+use warnings  qw(FATAL utf8);    # Fatalize encoding glitches.
+use open      qw(:std :utf8);    # Undeclared streams in UTF-8.
 
 our $Debug   = 0;
-our $VERSION = '1.13';
+our $VERSION = '1.14';
+
+use Perl6::Slurp; # slurp().
 
 # -----------------------------------------------
 
@@ -280,35 +284,55 @@ sub common_ancestor {
 
 # -----------------------------------------------
 
-sub copy {
-  my($from,$o) = @_[0,1];
-  $o = {} unless ref $o;
+sub copy
+{
+	my($from, $o) = @_[0,1];
+	$o = {} unless ref $o;
 
-  # Straight dupe, and bless into same class:
-  my $to = bless { %$from }, ref($from);
+	# Straight dup, and bless into same class.
 
-  # Null out linkages.
-  $to->_init_mother;
-  $to->_init_daughters;
+	my $to = bless { %$from }, ref($from);
 
-  # dupe the 'attributes' attribute:
-  unless($o->{'no_attribute_copy'}) {
-    my $attrib_copy = ref($to->{'attributes'});
-    if($attrib_copy) {
-      if($attrib_copy eq 'HASH') {
-        $to->{'attributes'} = { %{$to->{'attributes'}} };
-        # dupe the hashref
-      } elsif ($attrib_copy = UNIVERSAL::can($to->{'attributes'}, 'copy') ) {
-        # $attrib_copy now points to the copier method
-        $to->{'attributes'} = &{$attrib_copy}($from);
-      } # otherwise I don't know how to copy it; leave as is
-    }
-  }
-  $o->{'from_to'}->{$from} = $to; # SECRET VOODOO
-    # ...autovivifies an anon hashref for 'from_to' if need be
-    # This is here in case I later want/need a table corresponding
-    # old nodes to new.
-  return $to;
+	# Null out linkages.
+
+	$to -> _init_mother;
+	$to -> _init_daughters;
+
+	# Dup the 'attributes' attribute.
+
+	if ($$o{'no_attribute_copy'})
+	{
+		$$to{attributes} = {};
+	}
+	else
+	{
+		my $attrib_copy = ref($to->{'attributes'});
+
+		if ($attrib_copy)
+		{
+			if ($attrib_copy eq 'HASH')
+			{
+				# Dup the hashref.
+
+				$$to{'attributes'} = { %{$$to{'attributes'}} };
+			}
+			elsif ($attrib_copy = UNIVERSAL::can($to->{'attributes'}, 'copy') )
+			{
+				# $attrib_copy now points to the copier method.
+
+				$$to{'attributes'} = &{$attrib_copy}($from);
+
+			} # Otherwise I don't know how to copy it; leave as is.
+		}
+	}
+
+	$$o{'from_to'}{$from} = $to; # SECRET VOODOO
+
+	# ...autovivifies an anon hashref for 'from_to' if need be
+	# This is here in case I later want/need a table corresponding
+	# old nodes to new.
+
+	return $to;
 }
 
 # -----------------------------------------------
@@ -1030,6 +1054,88 @@ sub random_network { # constructor or method.
 
 # -----------------------------------------------
 
+sub read_attributes
+{
+	my($self, $s) = @_;
+
+	my($attributes);
+	my($name);
+
+	if ($s =~ /^(.+). Attributes: ({.*})$/)
+	{
+		($name, $attributes) = ($1, $self -> string2hashref($2) );
+	}
+	else
+	{
+		($name, $attributes) = ($s, {});
+	}
+
+	return Tree::DAG_Node -> new({name => $name, attributes => $attributes});
+
+} # End of read_attributes.
+
+# -----------------------------------------------
+
+sub read_tree
+{
+	my($self, $file_name) = @_;
+	my($count)       = 0;
+	my($last_indent) = 0;
+
+	my($indent);
+	my($node);
+	my($offset);
+	my($root);
+	my(@stack);
+	my($tos);
+
+	for my $line (slurp($file_name, {chomp => 1, utf8 => 1}) )
+	{
+		$count++;
+
+		if ($count == 1)
+		{
+			$root = $node = $self -> read_attributes($line);
+		}
+		else
+		{
+			$indent = index($line, '---');
+
+			if ($indent > $last_indent)
+			{
+				$tos = $node;
+
+				push @stack, $node, $indent;
+			}
+			elsif ($indent < $last_indent)
+			{
+				$offset = $last_indent;
+
+				while ($offset > $indent)
+				{
+					$offset = pop @stack;
+					$tos    = pop @stack;
+				}
+
+				push @stack, $tos, $offset;
+			}
+
+			# Warning: The next line must set $node.
+			# Don't put the RHS into the call to add_daughter()!
+
+			$node        = $self -> read_attributes(substr($line, $indent + 3) );
+			$last_indent = $indent;
+
+			$tos -> add_daughter($node);
+		}
+	}
+
+	return $root;
+
+} # End of read_tree.
+
+# -----------------------------------------------
+
 sub remove_daughters { # write-only method
   my($mother, @daughters) = @_;
   die "mother must be an object!" unless ref $mother;
@@ -1226,6 +1332,58 @@ sub sisters {
               @{$node->{'mother'}->{'daughters'}}
              );
 }
+
+# -----------------------------------------------
+
+sub string2hashref
+{
+	my($self, $s) = @_;
+	$s            ||= '';
+	my($result)   = {};
+
+	my($k);
+	my($v);
+
+	if ($s)
+	{
+		# Expect:
+		# 1: The presence of the comma in "(',')" complicates things, so we can't use split(/\s*,\s*/, $s).
+		#	{bracketed_name => "0", quantifier => "", real_name => "(',')"}
+		# 2: The presence of "=>" complicates things, so we can't use split(/\s*=>\s*/).
+		#	{bracketed_name => "0", quantifier => "", real_name => "=>"}
+		# 3: So, assume ', ' is the outer separator, and then ' => ' is the inner separator.
+
+		# Firstly, clean up the input, just to be safe.
+		# None of these will match output from hashref2string($h).
+
+		$s =~ s/^\s+\{/\{/;
+		$s =~ s/^\{\s+/\{/;
+		$s =~ s/\}\s+$/\}/;
+		$s =~ s/\s+\}$/\}/;
+
+		if ($s =~ m/^\{\s*(.*)\}$/)
+		{
+			my(@attr) = map
+						{
+							($k, $v) = split(/\s=>\s/);
+							$v       =~ s/^([\"\'])(.*)\1$/$2/;
+							($k => $v);
+						} split(/\s*,\s+/, $1);
+
+			if (@attr)
+			{
+				$result = {@attr};
+			}
+		}
+		else
+		{
+			die "Invalid syntax for hashref: $s";
+		}
+	}
+
+	return $result;
+
+} # End of string2hashref.
 
 # -----------------------------------------------
 
@@ -1532,6 +1690,11 @@ Using as a class of its own:
 	$new_daughter->name("More");
 	...
 
+Using with utf8 data:
+
+	read_tree($file_name) works with utf8 data. See t/read.tree.t and t/tree.utf8.attributes.txt.
+	Such a file can be created by redirecting the output of tree2string() to a file of type utf8.
+
 =head1 DESCRIPTION
 
 This class encapsulates/makes/manipulates objects that represent nodes
@@ -1725,7 +1888,7 @@ way.  Second off, it often requires subtly different syntax (e.g.,
 \@some_others vs @some_others).  It just complicates things for the
 programmer and the user, without making either appreciably happier.
 
-See however the comments under L</new($hashref)> for options supported in the call to new().
+See however the comments under L</new($hashref)> for options newly supported in the call to new().
 
 (This is not to say that options in general for a constructor are bad
 -- L</random_network($options)>, discussed far below, necessarily takes options.
@@ -1996,6 +2159,22 @@ If the nodes aren't all in the same tree, the answer is undef.
 
 As a degenerate case, if LIST is empty, returns $node's mother;
 that'll be undef if $node is root.
+
+=head2 copy($option)
+
+Returns a copy the calling node (the invocant). E.g.: my($copy) = $node -> copy;
+
+$option is a hashref of options, with these (key => value) pairs:
+
+=over 4
+
+=item o no_attribute_copy => $Boolean
+
+If set to 1, do not copy the node's attributes.
+
+If not specified, defaults to 0, which copies attributes.
+
+=back
 
 =head2 copy_at_and_under()
 
@@ -2522,6 +2701,38 @@ Default: 4.
 
 =back
 
+=head2 read_attributes($s)
+
+Parses the string $s and extracts the name and attributes, assuming the format is as generated by
+L</tree2string([$options], [$some_tree])>.
+
+This bascially means the string was generated by L</hashref2string($hashref)>.
+
+Attributes may be absent, in which case they default to {}.
+
+Returns a new node with this name and these attributes.
+
+This method is for use by L</read_tree($file_name)>.
+
+See t/tree.without.attributes.txt and t/tree.with.attributes.txt for sample data.
+
+=head2 read_tree($file_name)
+
+Returns the root of the tree read from $file_name.
+
+The file must have been written by re-directing the output of L</tree2string([$options], [$some_tree])> to a file,
+since it makes assumptions about the format of the stringified attributes.
+
+read_tree() works with utf8 data. See t/read.tree.t and t/tree.utf8.attributes.txt.
+
+Note: To call this method you need a caller. It'll be a tree of 1 node. The reason is that inside this method it
+calls various other methods, and for these calls it needs $self. That way, those methods can be called from
+anywhere, and not just from within read_tree().
+
+read_tree() works with utf8 data. See t/read.tree.t and t/tree.utf8.attributes.txt.
+
+For reading and writing trees to databases, see L<Tree::DAG_Node::Persist>.
+
 =head2 remove_daughter(LIST)
 
 An exact synonym for L</remove_daughters(LIST)>.
@@ -2680,6 +2891,14 @@ single node, which here gets the name 'Lonely'.
 Returns a list of all nodes (going left-to-right) that have the same
 mother as $node -- B<not including> $node itself.  If $node is root,
 this returns empty-list.
+
+=head2 string2hashref($s)
+
+Returns a hashref built from the string.
+
+The string is expected to be something like '{AutoCommit => '1', PrintError => "0", ReportError => 1}'.
+
+The empty string is returned as {}.
 
 =head2 tree_to_lol()
 
@@ -3016,10 +3235,14 @@ method, as it's used in I</lol_to_tree($lol)> and L</random_network($options)>.)
 
 C<Tree::DAG_Node>, as it happens. More details: L</SEE ALSO>.
 
+=head2 Why does read_tree() use Perl6::Slurp and not File::Slurp?
+
+Because L<Perl6::Slurp> supports utf8. See t/read.tree.t and t/tree.utf8.attributes.txt.
+
 =head2 How to process every node in tree?
 
-See L</walk_down($options)>. $options normally looks like, assuming we wish to pass in
-an arrayref to a stack, for example:
+See L</walk_down($options)>. $options normally looks like this, assuming we wish to pass in
+an arrayref as a stack:
 
 	my(@stack);
 
@@ -3084,16 +3307,6 @@ Because I want to list the methods in alphabetical order.
 
 Because the apostrophes in the text confused the syntax hightlighter in my editor UltraEdit.
 
-=head1 TODO
-
-=over 4
-
-=item o Copy node does not respect the no_attribute_copy option
-
-This is a bug.
-
-=back
-
 =head1 SEE ALSO
 
 =over 4
@@ -3151,7 +3364,7 @@ Programs>.)
 
 =head1 MACHINE-READABLE CHANGE LOG
 
-The file CHANGES was converted into Changelog.ini by L<Module::Metadata::Changes>.
+The file Changes was converted into Changelog.ini by L<Module::Metadata::Changes>.
 
 =head1 SUPPORT
 
@@ -3161,7 +3374,8 @@ L<https://rt.cpan.org/Public/Dist/Display.html?Name=Tree::DAG_Node>.
 
 =head1 ACKNOWLEDGEMENTS
 
-The code to print the tree, in tree2string(), was adapted from L<Forest::Tree::Writer::ASCIIWithBranches>.
+The code to print the tree, in tree2string(), was adapted from L<Forest::Tree::Writer::ASCIIWithBranches>
+by the dread Stevan Little.
 
 =head1 MAINTAINER
 

@@ -12,3 +12,7 @@ t/about.perl.t
 t/cut.and.paste.subtrees.t
 t/load.t
 t/pod.t
+t/read.tree.t
+t/tree.utf8.attributes.txt
+t/tree.with.attributes.txt
+t/tree.without.attributes.txt

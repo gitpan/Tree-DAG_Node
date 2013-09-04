@@ -151,7 +151,7 @@ sub process_tree
 my($count) = 0;
 my($tree)  = grow_tree;
 
-ok(1 == 1, 'Grow tree'); $count++;
+ok(1 == 1, '1: Grow tree'); $count++;
 
 my($drawing_1)  = join('', map{s/\s+$//; "$_\n"} @{$tree -> draw_ascii_tree});
 my($expected_1) = <<'EOS';
@@ -168,7 +168,7 @@ my($expected_1) = <<'EOS';
                 <O>
 EOS
 
-ok($drawing_1 eq $expected_1, 'draw_ascii_tree() before cut-and-paste returned expected string'); $count++;
+ok($drawing_1 eq $expected_1, '2: draw_ascii_tree() before cut-and-paste returned expected string'); $count++;
 
 my($drawing_2)  = join('', map{s/\s+$//; "$_\n"} @{$tree -> tree2string});
 my($expected_2) = <<'EOS';
@@ -195,11 +195,11 @@ Root. Attributes: {# => "0"}
        |---C. Attributes: {# => "9"}
 EOS
 
-ok($drawing_2 eq $expected_2, 'tree2string() before cut-and-paste returned expected string'); $count++;
+ok($drawing_2 eq $expected_2, '3: tree2string() before cut-and-paste returned expected string'); $count++;
 
 process_tree($tree);
 
-ok(1 == 1, 'Process tree'); $count++;
+ok(1 == 1, '4: Process tree'); $count++;
 
 my($drawing_3)  = join('', map{s/\s+$//; "$_\n"} @{$tree -> draw_ascii_tree});
 my($expected_3) = <<'EOS';
@@ -221,38 +221,38 @@ my($expected_3) = <<'EOS';
     <O>     <O>
 EOS
 
-ok($drawing_3 eq $expected_3, 'draw_ascii_tree() after cut-and-paste returned expected string'); $count++;
+ok($drawing_3 eq $expected_3, '5: draw_ascii_tree() after cut-and-paste returned expected string'); $count++;
 
 my($drawing_4)  = join('', map{s/\s+$//; "$_\n"} @{$tree -> tree2string});
 my($expected_4) = <<'EOS';
 Root. Attributes: {# => "0"}
    |---I. Attributes: {# => "1"}
-   |   |---J. Attributes: {# => "3", replaced => "1"}
-   |   |   |---K. Attributes: {# => "3"}
-   |   |---J. Attributes: {# => "4", replaced => "1"}
-   |       |---L. Attributes: {# => "5", replaced => "1"}
-   |           |---M. Attributes: {# => "5"}
-   |               |---N. Attributes: {# => "5"}
-   |                   |---O. Attributes: {# => "5"}
+   |   |---J. Attributes: {replaced => "1"}
+   |   |   |---K. Attributes: {}
+   |   |---J. Attributes: {replaced => "1"}
+   |       |---L. Attributes: {replaced => "1"}
+   |           |---M. Attributes: {}
+   |               |---N. Attributes: {}
+   |                   |---O. Attributes: {}
    |---H. Attributes: {# => "2"}
-   |   |---J. Attributes: {# => "3", replaced => "1"}
-   |   |   |---K. Attributes: {# => "3"}
-   |   |---J. Attributes: {# => "4", replaced => "1"}
-   |       |---L. Attributes: {# => "5", replaced => "1"}
-   |           |---M. Attributes: {# => "5"}
-   |               |---N. Attributes: {# => "5"}
-   |                   |---O. Attributes: {# => "5"}
+   |   |---J. Attributes: {replaced => "1"}
+   |   |   |---K. Attributes: {}
+   |   |---J. Attributes: {replaced => "1"}
+   |       |---L. Attributes: {replaced => "1"}
+   |           |---M. Attributes: {}
+   |               |---N. Attributes: {}
+   |                   |---O. Attributes: {}
    |---D. Attributes: {# => "6"}
-   |   |---F. Attributes: {# => "8", replaced => "1"}
-   |       |---G. Attributes: {# => "8"}
+   |   |---F. Attributes: {replaced => "1"}
+   |       |---G. Attributes: {}
    |---E. Attributes: {# => "7"}
-   |   |---F. Attributes: {# => "8", replaced => "1"}
-   |       |---G. Attributes: {# => "8"}
+   |   |---F. Attributes: {replaced => "1"}
+   |       |---G. Attributes: {}
    |---B. Attributes: {# => "9"}
        |---C. Attributes: {# => "9"}
 EOS
 
-ok($drawing_4 eq $expected_4, 'tree2string() after cut-and-paste returned expected string'); $count++;
+ok($drawing_4 eq $expected_4, '6: tree2string() after cut-and-paste returned expected string'); $count++;
 
 done_testing($count);
 
