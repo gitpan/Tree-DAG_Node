@@ -28,9 +28,9 @@ WriteMakefile
 	PL_FILES  => {},
 	PREREQ_PM =>
 	{
+		'File::Spec'   => 3.40,
 		'File::Temp'   => 0.2301,
 		'open'         => 0,
-		'Path::Tiny'   => 0.025,
 		'perl'         => '5.8.1', # For the utf8 stuff.
 		'Perl6::Slurp' => 0.051003,
 		'strict'       => 0,

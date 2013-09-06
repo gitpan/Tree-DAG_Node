@@ -6,7 +6,7 @@ use warnings  qw(FATAL utf8);    # Fatalize encoding glitches.
 use open      qw(:std :utf8);    # Undeclared streams in UTF-8.
 
 our $Debug   = 0;
-our $VERSION = '1.14';
+our $VERSION = '1.15';
 
 use Perl6::Slurp; # slurp().
 
