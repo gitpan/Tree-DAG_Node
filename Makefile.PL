@@ -8,11 +8,8 @@ use ExtUtils::MakeMaker;
 
 WriteMakefile
 (
-	($] ge '5.005') ?
-	(
-		ABSTRACT => 'An N-ary tree',
-		AUTHOR   => 'Sean M. Burke <sburke@cpan.org>',
-	) : (),
+	ABSTRACT => 'An N-ary tree',
+	AUTHOR   => 'Sean M. Burke <sburke@cpan.org>',
 	clean =>
 	{
 		FILES => 'blib/* Makefile MANIFEST Tree-DAG_Node-*'
@@ -22,21 +19,20 @@ WriteMakefile
 		COMPRESS => 'gzip',
 		SUFFIX   => 'gz'
 	},
-	DISTNAME  => 'Tree-DAG_Node',
-	NAME      => 'Tree::DAG_Node',
-	LICENSE   => 'artistic_2',
-	PL_FILES  => {},
-	PREREQ_PM =>
+	DISTNAME         => 'Tree-DAG_Node',
+	LICENSE          => 'artistic_2',
+	MIN_PERL_VERSION => '5.008001', # For the utf8 stuff.
+	NAME             => 'Tree::DAG_Node',
+	PL_FILES         => {},
+	PREREQ_PM        =>
 	{
-		'File::Spec'   => 3.40,
-		'File::Temp'   => 0.2301,
-		'open'         => 0,
-		'perl'         => '5.8.1', # For the utf8 stuff.
-		'Perl6::Slurp' => 0.051003,
-		'strict'       => 0,
-		'Test::More'   => 0.98,
-##		'Test::Pod'    => 1.45, # Make it optional. See t/pod.t. # Make it optional. See t/pod.t
-		'warnings'     => 0,
+		'File::Spec'  => 3.40,
+		'File::Temp'  => 0.2301,
+		'File::Slurp' => 9999.19,
+		'strict'      => 0,
+		'Test::More'  => 0.98,
+##		'Test::Pod'   => 1.45, # Make it optional. See t/pod.t. # Make it optional. See t/pod.t
+		'warnings'    => 0,
 	},
 	VERSION_FROM => 'lib/Tree/DAG_Node.pm',
 );

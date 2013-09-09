@@ -2,13 +2,12 @@ package Tree::DAG_Node;
 
 use strict;
 use warnings;
-use warnings  qw(FATAL utf8);    # Fatalize encoding glitches.
-use open      qw(:std :utf8);    # Undeclared streams in UTF-8.
+use warnings  qw(FATAL utf8); # Fatalize encoding glitches.
 
 our $Debug   = 0;
-our $VERSION = '1.15';
+our $VERSION = '1.16';
 
-use Perl6::Slurp; # slurp().
+use File::Slurp; # For read_file().
 
 # -----------------------------------------------
 
@@ -1089,7 +1088,7 @@ sub read_tree
 	my(@stack);
 	my($tos);
 
-	for my $line (slurp($file_name, {chomp => 1, utf8 => 1}) )
+	for my $line (read_file($file_name, {chomp => 1, binmode => ':encoding(utf8)'}) )
 	{
 		$count++;
 
@@ -3234,10 +3233,6 @@ method, as it's used in I</lol_to_tree($lol)> and L</random_network($options)>.)
 =head2 Which is the best tree processing module?
 
 C<Tree::DAG_Node>, as it happens. More details: L</SEE ALSO>.
-
-=head2 Why does read_tree() use Perl6::Slurp and not File::Slurp?
-
-Because L<Perl6::Slurp> supports utf8. See t/read.tree.t and t/tree.utf8.attributes.txt.
 
 =head2 How to process every node in tree?
 

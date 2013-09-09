@@ -1,5 +1,11 @@
 Revision history for Perl module Tree::DAG_Node.
 
+1.16  Mon Sep  9 09;26:00 2013
+	- Accept a patch (slightly modified by me) from Tom Molesworth (see RT#88501):
+		Remove 'use open qw(:std :utf8);' because of its global effect.
+		Replace Perl6::Slurp with File::Slurp, using the latter's binmode option for the encoding.
+		Fix docs where I'd erroneously said File::Slurp didn't support utf8.
+
 1.15  Fri Sep  6 11:10:00 2013
 	- Replace Path::Tiny with File::Spec, because the former's list of dependencies is soooo long :-(.
 		Changed files: t/read.tree.t, Build.PL and Makefile.PL.

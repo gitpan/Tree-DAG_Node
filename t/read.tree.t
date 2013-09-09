@@ -1,12 +1,11 @@
 use strict;
 use warnings;
-use warnings  qw(FATAL utf8);    # Fatalize encoding glitches.
-use open      qw(:std :utf8);    # Undeclared streams in UTF-8.
+use warnings  qw(FATAL utf8); # Fatalize encoding glitches.
 
 use File::Spec;
 use File::Temp;
 
-use Perl6::Slurp; # For slurp().
+use File::Slurp; # For read_file().
 
 use Test::More;
 
@@ -25,11 +24,11 @@ sub process
 	my($root)            = $node -> read_tree($input_file_name);
 	my($no_attr)         = $file_name =~ /without/ ? 1 : 0;
 
-	open(OUT, '> :utf8', $test_file_name);
+	open(OUT, '> :encoding(utf8)', $test_file_name);
 	print OUT "$_\n" for @{$root -> tree2string({no_attributes => $no_attr})};
 	close OUT;
 
-	is(slurp("$input_file_name", {utf8 => 1}), slurp("$test_file_name", {utf8 => 1}), "\u$file_name attributes: Output tree matches shipped tree");
+	is(read_file("$input_file_name", {binmode => ':encoding(utf8)'}), read_file("$test_file_name", {binmode => ':encoding(utf8)'}), "\u$file_name attributes: Output tree matches shipped tree");
 
 } # End of process.
 

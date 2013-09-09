@@ -20,12 +20,11 @@ Module::Build -> new
 	},
 	requires =>
 	{
-		'File::Spec'   => 3.40,
-		'File::Temp'   => 0.2301,
-		'open'         => 0,
-		'perl'         => '5.8.1', # For the utf8 stuff.
-		'Perl6::Slurp' => 0.051003,
-		'strict'       => 0,
-		'warnings'     => 0,
+		'File::Spec'  => 3.40,
+		'File::Temp'  => 0.2301,
+		'perl'        => '5.008001', # For the utf8 stuff.
+		'File::Slurp' => 9999.19,
+		'strict'      => 0,
+		'warnings'    => 0,
 	},
 ) -> create_build_script();
