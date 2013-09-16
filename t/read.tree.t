@@ -24,11 +24,11 @@ sub process
 	my($root)            = $node -> read_tree($input_file_name);
 	my($no_attr)         = $file_name =~ /without/ ? 1 : 0;
 
-	open(OUT, '> :encoding(utf8)', $test_file_name);
+	open(OUT, '> :raw:encoding(utf-8)', $test_file_name);
 	print OUT "$_\n" for @{$root -> tree2string({no_attributes => $no_attr})};
 	close OUT;
 
-	is(read_file("$input_file_name", {binmode => ':encoding(utf8)'}), read_file("$test_file_name", {binmode => ':encoding(utf8)'}), "\u$file_name attributes: Output tree matches shipped tree");
+	is(read_file("$input_file_name", {binmode => ':encoding(utf-8)'}), read_file("$test_file_name", {binmode => ':encoding(utf-8)'}), "\u$file_name attributes: Output tree matches shipped tree");
 
 } # End of process.
 

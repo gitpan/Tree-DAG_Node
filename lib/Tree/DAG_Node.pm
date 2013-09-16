@@ -5,7 +5,7 @@ use warnings;
 use warnings  qw(FATAL utf8); # Fatalize encoding glitches.
 
 our $Debug   = 0;
-our $VERSION = '1.16';
+our $VERSION = '1.17';
 
 use File::Slurp; # For read_file().
 
@@ -1088,7 +1088,7 @@ sub read_tree
 	my(@stack);
 	my($tos);
 
-	for my $line (read_file($file_name, {chomp => 1, binmode => ':encoding(utf8)'}) )
+	for my $line (read_file($file_name, {chomp => 1, binmode => ':encoding(utf-8)'}) )
 	{
 		$count++;
 
@@ -1689,10 +1689,12 @@ Using as a class of its own:
 	$new_daughter->name("More");
 	...
 
-Using with utf8 data:
+Using with utf-8 data:
 
-	read_tree($file_name) works with utf8 data. See t/read.tree.t and t/tree.utf8.attributes.txt.
-	Such a file can be created by redirecting the output of tree2string() to a file of type utf8.
+	read_tree($file_name) works with utf-8 data. See t/read.tree.t and t/tree.utf8.attributes.txt.
+	Such a file can be created by redirecting the output of tree2string() to a file of type utf-8.
+
+See the docs for Encode for the difference between utf8 and utf-8. In brief, use utf-8.
 
 =head1 DESCRIPTION
 
@@ -2722,13 +2724,11 @@ Returns the root of the tree read from $file_name.
 The file must have been written by re-directing the output of L</tree2string([$options], [$some_tree])> to a file,
 since it makes assumptions about the format of the stringified attributes.
 
-read_tree() works with utf8 data. See t/read.tree.t and t/tree.utf8.attributes.txt.
+read_tree() works with utf-8 data. See t/read.tree.t and t/tree.utf8.attributes.txt.
 
 Note: To call this method you need a caller. It'll be a tree of 1 node. The reason is that inside this method it
 calls various other methods, and for these calls it needs $self. That way, those methods can be called from
 anywhere, and not just from within read_tree().
-
-read_tree() works with utf8 data. See t/read.tree.t and t/tree.utf8.attributes.txt.
 
 For reading and writing trees to databases, see L<Tree::DAG_Node::Persist>.
 

@@ -21,7 +21,7 @@ WriteMakefile
 	},
 	DISTNAME         => 'Tree-DAG_Node',
 	LICENSE          => 'artistic_2',
-	MIN_PERL_VERSION => '5.008001', # For the utf8 stuff.
+	MIN_PERL_VERSION => '5.008001', # For the utf-8 stuff.
 	NAME             => 'Tree::DAG_Node',
 	PL_FILES         => {},
 	PREREQ_PM        =>
