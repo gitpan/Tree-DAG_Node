@@ -1,5 +1,11 @@
 Revision history for Perl module Tree::DAG_Node.
 
+1.18  Thu Sep 19 14:24:00 2013
+	- No changes, code or otherwise, except for the version # in the *.pm, this file, and Changelog.ini.
+	- Somehow a corrupted version got uploaded to search.cpan.org, so I've just changed the version #.
+		The file on MetaCPAN was fine.
+	- Thanx to Rob (Sisyphus) for reporting this.
+
 1.17  Mon Sep 16 15:24:00 2013
 	- Write test temp files in :raw mode as well as utf-8, for MS Windows users.
 	- Take the opportunity to change all utf8 to utf-8, as per the docs for Encode,

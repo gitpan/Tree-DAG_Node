@@ -5,7 +5,7 @@ use warnings;
 use warnings  qw(FATAL utf8); # Fatalize encoding glitches.
 
 our $Debug   = 0;
-our $VERSION = '1.17';
+our $VERSION = '1.18';
 
 use File::Slurp; # For read_file().
 
