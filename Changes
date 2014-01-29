@@ -1,5 +1,9 @@
 Revision history for Perl module Tree::DAG_Node.
 
+1.19  Thu Jan 30 09:24:00 2014
+	- Set pre-req File::Temp version # to 0 (back from 0.2301). See D A Golden's blog entry:
+		http://www.dagolden.com/index.php/2293/why-installing-distzilla-is-slow-and-what-you-can-do-about-it/.
+
 1.18  Thu Sep 19 14:24:00 2013
 	- No changes, code or otherwise, except for the version # in the *.pm, this file, and Changelog.ini.
 	- Somehow a corrupted version got uploaded to search.cpan.org, so I've just changed the version #.

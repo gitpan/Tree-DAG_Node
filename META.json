@@ -4,9 +4,9 @@
       "Sean M. Burke <sburke@cpan.org>"
    ],
    "dynamic_config" : 1,
-   "generated_by" : "Module::Build version 0.4005, CPAN::Meta::Converter version 2.131560",
+   "generated_by" : "Module::Build version 0.4204",
    "license" : [
-      "artistic_2"
+      "artistic_2_0"
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
@@ -28,8 +28,7 @@
          "requires" : {
             "File::Slurp" : "9999.19",
             "File::Spec" : "3.4",
-            "File::Temp" : "0.2301",
-            "perl" : "5.008001",
+            "File::Temp" : "0",
             "strict" : "0",
             "warnings" : "0"
          }
@@ -38,14 +37,14 @@
    "provides" : {
       "Tree::DAG_Node" : {
          "file" : "lib/Tree/DAG_Node.pm",
-         "version" : "1.18"
+         "version" : "1.19"
       }
    },
    "release_status" : "stable",
    "resources" : {
       "license" : [
-         "http://www.perlfoundation.org/artistic_license_2_0"
+         "http://opensource.org/licenses/artistic-license-2.0.php"
       ]
    },
-   "version" : "1.18"
+   "version" : "1.19"
 }

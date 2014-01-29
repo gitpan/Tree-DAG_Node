@@ -1,6 +1,8 @@
 use strict;
 use warnings;
 
+use 5.008_001; # For the utf-8 stuff.
+
 use ExtUtils::MakeMaker;
 
 # See lib/ExtUtils/MakeMaker.pm for details of how to influence
@@ -19,15 +21,14 @@ WriteMakefile
 		COMPRESS => 'gzip',
 		SUFFIX   => 'gz'
 	},
-	DISTNAME         => 'Tree-DAG_Node',
-	LICENSE          => 'artistic_2',
-	MIN_PERL_VERSION => '5.008001', # For the utf-8 stuff.
-	NAME             => 'Tree::DAG_Node',
-	PL_FILES         => {},
-	PREREQ_PM        =>
+	DISTNAME  => 'Tree-DAG_Node',
+	LICENSE   => 'artistic_2',
+	NAME      => 'Tree::DAG_Node',
+	PL_FILES  => {},
+	PREREQ_PM =>
 	{
 		'File::Spec'  => 3.40,
-		'File::Temp'  => 0.2301,
+		'File::Temp'  => 0,
 		'File::Slurp' => 9999.19,
 		'strict'      => 0,
 		'Test::More'  => 0.98,
