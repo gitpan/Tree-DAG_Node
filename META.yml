@@ -7,8 +7,8 @@ build_requires:
 configure_requires:
   Module::Build: 0.38
 dynamic_config: 1
-generated_by: 'Module::Build version 0.4204, CPAN::Meta::Converter version 2.120921'
-license: unknown
+generated_by: 'Module::Build version 0.4204, CPAN::Meta::Converter version 2.133380'
+license: artistic_2
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
   version: 1.4
@@ -16,13 +16,13 @@ name: Tree-DAG_Node
 provides:
   Tree::DAG_Node:
     file: lib/Tree/DAG_Node.pm
-    version: 1.19
+    version: 1.20
 requires:
   File::Slurp: 9999.19
   File::Spec: 3.4
-  File::Temp: 0
+  File::Temp: 0.19
   strict: 0
   warnings: 0
 resources:
-  license: http://opensource.org/licenses/artistic-license-2.0.php
-version: 1.19
+  license: http://www.perlfoundation.org/artistic_license_2_0
+version: 1.20
