@@ -5,7 +5,7 @@ use warnings  qw(FATAL utf8); # Fatalize encoding glitches.
 use File::Spec;
 use File::Temp;
 
-use File::Slurp; # For read_file().
+use File::Slurp::Tiny 'read_file';
 
 use Test::More;
 
@@ -28,7 +28,7 @@ sub process
 	print OUT "$_\n" for @{$root -> tree2string({no_attributes => $no_attr})};
 	close OUT;
 
-	is(read_file("$input_file_name", {binmode => ':encoding(utf-8)'}), read_file("$test_file_name", {binmode => ':encoding(utf-8)'}), "\u$file_name attributes: Output tree matches shipped tree");
+	is(read_file("$input_file_name", binmode => ':encoding(utf-8)'), read_file("$test_file_name", binmode => ':encoding(utf-8)'), "\u$file_name attributes: Output tree matches shipped tree");
 
 } # End of process.
 

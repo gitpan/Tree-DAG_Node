@@ -16,7 +16,7 @@ name: Tree-DAG_Node
 provides:
   Tree::DAG_Node:
     file: lib/Tree/DAG_Node.pm
-    version: 1.21
+    version: 1.22
 requires:
   File::Slurp::Tiny: 0.003
   File::Spec: 3.4
@@ -25,4 +25,4 @@ requires:
   warnings: 0
 resources:
   license: http://www.perlfoundation.org/artistic_license_2_0
-version: 1.21
+version: 1.22

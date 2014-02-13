@@ -1,5 +1,8 @@
 Revision history for Perl module Tree::DAG_Node.
 
+1.22  Thu Feb 13 13:14:00 2014
+	- t/read.tree.t was still using File::Slurp :-(.
+
 1.21  Thu Feb 13 11:14:00 2014
 	- Switch from File::Slurp to File::Slurp::Tiny, on the advice of Karen Etheridge. See RT#92976.
 
