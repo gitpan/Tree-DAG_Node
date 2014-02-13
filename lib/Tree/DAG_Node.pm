@@ -5,9 +5,9 @@ use warnings;
 use warnings  qw(FATAL utf8); # Fatalize encoding glitches.
 
 our $Debug   = 0;
-our $VERSION = '1.20';
+our $VERSION = '1.21';
 
-use File::Slurp; # For read_file().
+use File::Slurp::Tiny 'read_lines';
 
 # -----------------------------------------------
 
@@ -1088,7 +1088,7 @@ sub read_tree
 	my(@stack);
 	my($tos);
 
-	for my $line (read_file($file_name, {chomp => 1, binmode => ':encoding(utf-8)'}) )
+	for my $line (read_lines($file_name, binmode => ':encoding(utf-8)', chomp => 1) )
 	{
 		$count++;
 

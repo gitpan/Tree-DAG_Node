@@ -26,7 +26,7 @@
       },
       "runtime" : {
          "requires" : {
-            "File::Slurp" : "9999.19",
+            "File::Slurp::Tiny" : "0.003",
             "File::Spec" : "3.4",
             "File::Temp" : "0.19",
             "strict" : "0",
@@ -37,7 +37,7 @@
    "provides" : {
       "Tree::DAG_Node" : {
          "file" : "lib/Tree/DAG_Node.pm",
-         "version" : "1.20"
+         "version" : "1.21"
       }
    },
    "release_status" : "stable",
@@ -46,5 +46,5 @@
          "http://www.perlfoundation.org/artistic_license_2_0"
       ]
    },
-   "version" : "1.20"
+   "version" : "1.21"
 }

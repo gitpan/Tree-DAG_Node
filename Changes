@@ -1,5 +1,8 @@
 Revision history for Perl module Tree::DAG_Node.
 
+1.21  Thu Feb 13 11:14:00 2014
+	- Switch from File::Slurp to File::Slurp::Tiny, on the advice of Karen Etheridge. See RT#92976.
+
 1.20  Fri Jan 31 09:46:00 2014
 	- After a private email from Paul Howarth (yea!) I see I need File::Temp V 0.19 because that's
 		the version which introduced the newdir() method, as used in the test suite. Sorry for the churn.

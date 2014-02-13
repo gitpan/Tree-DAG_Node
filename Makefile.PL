@@ -27,13 +27,13 @@ WriteMakefile
 	PL_FILES  => {},
 	PREREQ_PM =>
 	{
-		'File::Spec'  => 3.40,
-		'File::Temp'  => 0.19,
-		'File::Slurp' => 9999.19,
-		'strict'      => 0,
-		'Test::More'  => 0.98,
-##		'Test::Pod'   => 1.45, # Make it optional. See t/pod.t. # Make it optional. See t/pod.t
-		'warnings'    => 0,
+		'File::Spec'        => 3.40,
+		'File::Temp'        => 0.19,
+		'File::Slurp::Tiny' => 0.003,
+		'strict'            => 0,
+		'Test::More'        => 0.98,
+##		'Test::Pod'         => 1.45, # Make it optional. See t/pod.t. # Make it optional. See t/pod.t
+		'warnings'          => 0,
 	},
 	VERSION_FROM => 'lib/Tree/DAG_Node.pm',
 );

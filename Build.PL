@@ -22,10 +22,10 @@ Module::Build -> new
 	},
 	requires =>
 	{
-		'File::Spec'  => 3.40,
-		'File::Temp'  => 0.19,
-		'File::Slurp' => 9999.19,
-		'strict'      => 0,
-		'warnings'    => 0,
+		'File::Spec'        => 3.40,
+		'File::Temp'        => 0.19,
+		'File::Slurp::Tiny' => 0.003,
+		'strict'            => 0,
+		'warnings'          => 0,
 	},
 ) -> create_build_script();
