@@ -40,7 +40,7 @@ my($node) = Tree::DAG_Node -> new;
 
 isa_ok($node, 'Tree::DAG_Node', 'new() returned correct object type');
 
-for (qw/utf8 with without/)
+for (qw/utf8/)# with without/)
 {
 	process($node, $_);
 }

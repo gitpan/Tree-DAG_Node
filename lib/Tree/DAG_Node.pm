@@ -5,7 +5,7 @@ use warnings;
 use warnings  qw(FATAL utf8); # Fatalize encoding glitches.
 
 our $Debug   = 0;
-our $VERSION = '1.22';
+our $VERSION = '1.23';
 
 use File::Slurp::Tiny 'read_lines';
 
@@ -989,7 +989,7 @@ sub node2string
 		$$vert_dashes[$depth] = $offset;
 	}
 
-	return join('' => @indent[1 .. $#indent]) . ($depth ? '   |---' : '') . $self -> format_node($options, $t);
+	return join('' => @indent[1 .. $#indent]) . ($depth ? '   |--- ' : '') . $self -> format_node($options, $t);
 
 } # End of node2string.
 
@@ -1060,7 +1060,7 @@ sub read_attributes
 	my($attributes);
 	my($name);
 
-	if ($s =~ /^(.+). Attributes: ({.*})$/)
+	if ($s =~ /^(.+)\. Attributes: ({.*})$/)
 	{
 		($name, $attributes) = ($1, $self -> string2hashref($2) );
 	}
@@ -1080,6 +1080,8 @@ sub read_tree
 	my($self, $file_name) = @_;
 	my($count)       = 0;
 	my($last_indent) = 0;
+	my($test_string) = '--- ';
+	my($test_length) = length $test_string;
 
 	my($indent);
 	my($node);
@@ -1098,7 +1100,7 @@ sub read_tree
 		}
 		else
 		{
-			$indent = index($line, '---');
+			$indent = index($line, $test_string);
 
 			if ($indent > $last_indent)
 			{
@@ -1122,7 +1124,7 @@ sub read_tree
 			# Warning: The next line must set $node.
 			# Don't put the RHS into the call to add_daughter()!
 
-			$node        = $self -> read_attributes(substr($line, $indent + 3) );
+			$node        = $self -> read_attributes(substr($line, $indent + $test_length) );
 			$last_indent = $indent;
 
 			$tos -> add_daughter($node);
@@ -2969,58 +2971,58 @@ Draws a nice ASCII-art representation of the tree structure.
 The tree looks like:
 
 	Root. Attributes: {# => "0"}
-	   |---I. Attributes: {# => "1"}
-	   |   |---J. Attributes: {# => "3"}
-	   |   |   |---K. Attributes: {# => "3"}
-	   |   |---J. Attributes: {# => "4"}
-	   |       |---L. Attributes: {# => "5"}
-	   |           |---M. Attributes: {# => "5"}
-	   |               |---N. Attributes: {# => "5"}
-	   |                   |---O. Attributes: {# => "5"}
-	   |---H. Attributes: {# => "2"}
-	   |   |---J. Attributes: {# => "3"}
-	   |   |   |---K. Attributes: {# => "3"}
-	   |   |---J. Attributes: {# => "4"}
-	   |       |---L. Attributes: {# => "5"}
-	   |           |---M. Attributes: {# => "5"}
-	   |               |---N. Attributes: {# => "5"}
-	   |                   |---O. Attributes: {# => "5"}
-	   |---D. Attributes: {# => "6"}
-	   |   |---F. Attributes: {# => "8"}
-	   |       |---G. Attributes: {# => "8"}
-	   |---E. Attributes: {# => "7"}
-	   |   |---F. Attributes: {# => "8"}
-	   |       |---G. Attributes: {# => "8"}
-	   |---B. Attributes: {# => "9"}
-	       |---C. Attributes: {# => "9"}
+	   |--- I. Attributes: {# => "1"}
+	   |   |--- J. Attributes: {# => "3"}
+	   |   |   |--- K. Attributes: {# => "3"}
+	   |   |--- J. Attributes: {# => "4"}
+	   |       |--- L. Attributes: {# => "5"}
+	   |           |--- M. Attributes: {# => "5"}
+	   |               |--- N. Attributes: {# => "5"}
+	   |                   |--- O. Attributes: {# => "5"}
+	   |--- H. Attributes: {# => "2"}
+	   |   |--- J. Attributes: {# => "3"}
+	   |   |   |--- K. Attributes: {# => "3"}
+	   |   |--- J. Attributes: {# => "4"}
+	   |       |--- L. Attributes: {# => "5"}
+	   |           |--- M. Attributes: {# => "5"}
+	   |               |--- N. Attributes: {# => "5"}
+	   |                   |--- O. Attributes: {# => "5"}
+	   |--- D. Attributes: {# => "6"}
+	   |   |--- F. Attributes: {# => "8"}
+	   |       |--- G. Attributes: {# => "8"}
+	   |--- E. Attributes: {# => "7"}
+	   |   |--- F. Attributes: {# => "8"}
+	   |       |--- G. Attributes: {# => "8"}
+	   |--- B. Attributes: {# => "9"}
+	       |--- C. Attributes: {# => "9"}
 
 Or, without attributes:
 
 	Root
-	   |---I
-	   |   |---J
-	   |   |   |---K
-	   |   |---J
-	   |       |---L
-	   |           |---M
-	   |               |---N
-	   |                   |---O
-	   |---H
-	   |   |---J
-	   |   |   |---K
-	   |   |---J
-	   |       |---L
-	   |           |---M
-	   |               |---N
-	   |                   |---O
-	   |---D
-	   |   |---F
-	   |       |---G
-	   |---E
-	   |   |---F
-	   |       |---G
-	   |---B
-	       |---C
+	   |--- I
+	   |   |--- J
+	   |   |   |--- K
+	   |   |--- J
+	   |       |--- L
+	   |           |--- M
+	   |               |--- N
+	   |                   |--- O
+	   |--- H
+	   |   |--- J
+	   |   |   |--- K
+	   |   |--- J
+	   |       |--- L
+	   |           |--- M
+	   |               |--- N
+	   |                   |--- O
+	   |--- D
+	   |   |--- F
+	   |       |--- G
+	   |--- E
+	   |   |--- F
+	   |       |--- G
+	   |--- B
+	       |--- C
 
 See scripts/cut.and.paste.subtrees.pl.
 

@@ -1,5 +1,22 @@
 Revision history for Perl module Tree::DAG_Node.
 
+1.23  Mon Oct 20 18:12:00 2014
+	- Change output format when using node2string(), which is called by tree2string().
+		Indentation which used to be '|---' is now '|--- '. So, a tree which used to be printed as:
+		|---:default
+		|   |---::=
+		|   |---action
+		|   |---=>
+		|   |---[values]
+		Is now printed as:
+		|--- :default
+		|   |--- ::=
+		|   |--- action
+		|   |--- =>
+		|   |--- [values]
+		This makes the difference between node names ''/'-', '1'/'-1', etc, much clearer.
+		Apologies to anyone who runs tests which compare the output with pre-existing files.
+
 1.22  Thu Feb 13 13:14:00 2014
 	- t/read.tree.t was still using File::Slurp :-(.
 

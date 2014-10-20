@@ -1,9 +1,9 @@
 Root. Attributes: {}
-   |---Â. Attributes: {# => "ÂÂ"}
-       |---â. Attributes: {# => "ââ"}
-       |   |---É. Attributes: {# => "ÉÉ"}
-       |---é. Attributes: {# => "éé"}
-           |---Ñ. Attributes: {# => "ÑÑ"}
-               |---ñ. Attributes: {# => "ññ"}
-                   |---Ô. Attributes: {# => "ÔÔ"}
-                       |---ô. Attributes: {# => "ôô"}
+   |--- Â. Attributes: {# => "ÂÂ"}
+       |--- â. Attributes: {# => "ââ"}
+       |   |--- É. Attributes: {# => "ÉÉ"}
+       |--- é. Attributes: {# => "éé"}
+           |--- Ñ. Attributes: {# => "ÑÑ"}
+               |--- ñ. Attributes: {# => "ññ"}
+                   |--- Ô. Attributes: {# => "ÔÔ"}
+                       |--- ô. Attributes: {# => "ôô"}
